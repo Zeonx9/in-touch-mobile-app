@@ -42,9 +42,13 @@ class ChatListViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        isLoading = false,
-                        chats = result.data ?: emptyList()
+                        isLoading = false
                     )
+                    result.data?.onEach {
+                        _state.value = _state.value.copy(
+                            chats = it
+                        )
+                    }?.launchIn(viewModelScope)
                 }
             }
         }.launchIn(viewModelScope)

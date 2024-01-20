@@ -6,17 +6,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ChatTimeUnreadCount(
-    lastInteractionTime: String,
+    lastInteractionTime: LocalDateTime?,
     unreadCount: Int
 ) {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm, dd.MM")
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = lastInteractionTime.slice(IntRange(11, 15)))
+
+        Text(text = lastInteractionTime?.format(formatter) ?: "")
         if (unreadCount != 0) {
             TextInCircle(
                 text = "$unreadCount",

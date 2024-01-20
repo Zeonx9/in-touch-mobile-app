@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RowScope.ChatInfo(
     chatName: String,
-    lastMessageText: String
+    lastMessageText: String?
 ) {
     Column(
         modifier = Modifier
@@ -25,7 +25,7 @@ fun RowScope.ChatInfo(
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = lastMessageText,
+            text = lastMessageText ?: "",
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis
         )

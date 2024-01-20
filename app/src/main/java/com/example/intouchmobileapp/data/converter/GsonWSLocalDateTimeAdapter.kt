@@ -10,22 +10,24 @@ import java.lang.reflect.Type
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class GsonLocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+class GsonWSLocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     @Synchronized
     override fun serialize(
         date: LocalDateTime,
-        type: Type,
-        jsonSerializationContext: JsonSerializationContext
+        typeOfSrc: Type,
+        context: JsonSerializationContext
     ): JsonElement {
         return JsonPrimitive(date.format(DateTimeFormatter.ISO_DATE_TIME))
     }
 
     @Synchronized
     override fun deserialize(
-        jsonElement: JsonElement,
-        type: Type,
-        jsonDeserializationContext: JsonDeserializationContext
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext?
     ): LocalDateTime {
-        return LocalDateTime.parse(jsonElement.asString)
+        val arr = json.asJsonArray.map { it.asInt }
+        return LocalDateTime.of(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6])
     }
+
 }

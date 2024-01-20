@@ -1,21 +1,23 @@
 package com.example.intouchmobileapp.di
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.intouchmobileapp.common.Constants
+import com.example.intouchmobileapp.data.converter.GsonLocalDateAdapter
 import com.example.intouchmobileapp.data.converter.GsonLocalDateTimeAdapter
+import com.example.intouchmobileapp.data.converter.GsonWSLocalDateAdapter
+import com.example.intouchmobileapp.data.converter.GsonWSLocalDateTimeAdapter
 import com.example.intouchmobileapp.data.remote.api.AuthApi
 import com.example.intouchmobileapp.data.remote.api.ChatApi
 import com.example.intouchmobileapp.data.remote.api.StompApi
 import com.example.intouchmobileapp.data.remote.api.UserApi
 import com.example.intouchmobileapp.data.remote.stomp.StompApiImpl
 import com.example.intouchmobileapp.data.repository.ChatRepositoryImpl
+import com.example.intouchmobileapp.data.repository.MessageRepositoryImpl
 import com.example.intouchmobileapp.data.repository.SelfRepositoryImpl
 import com.example.intouchmobileapp.data.repository.UserRepositoryImpl
 import com.example.intouchmobileapp.domain.repository.ChatRepository
+import com.example.intouchmobileapp.domain.repository.MessageRepository
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import com.example.intouchmobileapp.domain.repository.UserRepository
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -25,6 +27,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Singleton
 
@@ -32,18 +35,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @Provides
     @Singleton
-    fun provideGson(): Gson {
-        return GsonBuilder()
+    fun provideRetrofit(): Retrofit {
+        val gson = GsonBuilder()
             .registerTypeAdapter(LocalDateTime::class.java, GsonLocalDateTimeAdapter())
+            .registerTypeAdapter(LocalDate::class.java, GsonLocalDateAdapter())
             .create()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(gson: Gson): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.SERVER_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -79,10 +77,11 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideStompApi(
-        stompClient: StompClient,
-        gson: Gson
-    ): StompApi {
+    fun provideStompApi(stompClient: StompClient): StompApi {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(LocalDateTime::class.java, GsonWSLocalDateTimeAdapter())
+            .registerTypeAdapter(LocalDate::class.java, GsonWSLocalDateAdapter())
+            .create()
         return StompApiImpl(stompClient, gson)
     }
 
@@ -108,5 +107,11 @@ class AppModule {
         selfRepository: SelfRepository,
     ): ChatRepository {
         return ChatRepositoryImpl(chatApi, selfRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageRepository(): MessageRepository {
+        return MessageRepositoryImpl()
     }
 }

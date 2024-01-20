@@ -1,7 +1,9 @@
 package com.example.intouchmobileapp.data.remote.dto
 
+import java.time.LocalDate
+
 data class Group(
-    val creationDate: String,
+    val creationDate: LocalDate,
     val creator: User,
     val name: String
 )

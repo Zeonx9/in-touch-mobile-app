@@ -1,11 +1,13 @@
 package com.example.intouchmobileapp.data.repository
 
-import android.util.Log
 import com.example.intouchmobileapp.data.remote.api.ChatApi
 import com.example.intouchmobileapp.data.remote.dto.Chat
-import com.example.intouchmobileapp.data.remote.dto.UnreadCounter
+import com.example.intouchmobileapp.data.remote.dto.Message
 import com.example.intouchmobileapp.domain.repository.ChatRepository
 import com.example.intouchmobileapp.domain.repository.SelfRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
@@ -13,15 +15,50 @@ class ChatRepositoryImpl @Inject constructor(
     private val selfRepository: SelfRepository
 ): ChatRepository {
 
-    override suspend fun getChats(): List<Chat> {
-        return chatApi.getChatsOfUser(selfRepository.selfId, selfRepository.authHeader)
-    }
+    private val _chats: MutableStateFlow<List<Chat>> = MutableStateFlow(emptyList())
+    override val chats: StateFlow<List<Chat>> = _chats
 
-    override suspend fun getUnreadCounters(): List<UnreadCounter> {
-        return chatApi.getUnreadCountersOfUser(selfRepository.selfId, selfRepository.authHeader)
-    }
+    override suspend fun fetchChats() {
+        val chats = chatApi.getChatsOfUser(selfRepository.selfId, selfRepository.authHeader)
+        val counters = chatApi.getUnreadCountersOfUser(selfRepository.selfId, selfRepository.authHeader)
+        val counterById = counters.associateBy { it.chatId }
 
+        _chats.update {
+            chats.map {
+                val count = counterById[it.id]?.count ?: 0
+                it.copy(unreadCounter = count)
+            }
+        }
+    }
     override fun onNewChatReceived(chat: Chat) {
-        Log.d(javaClass.name, "new chat with id=${chat.id} received")
+        _chats.update { addNewChat(it, chat) }
     }
+
+    private fun addNewChat(old: List<Chat>, chat: Chat): List<Chat> {
+        val newList = ArrayList(old)
+        newList.add(0, chat)
+        return newList
+    }
+
+    override fun onNewMessageReceived(message: Message) {
+        _chats.update { moveChatUpAndUpdateLastMessage(it, message) }
+    }
+
+    private fun moveChatUpAndUpdateLastMessage(old: List<Chat>, message: Message): List<Chat> {
+        val chat = old.find { it.id == message.chatId }!!
+        var newCounter = chat.unreadCounter
+        if (message.author.id != selfRepository.selfId) {
+            newCounter += 1
+        }
+        val newChat = chat.copy(
+            lastMessage = message,
+            unreadCounter = newCounter
+        )
+        val newList = ArrayList(old)
+        newList.remove(chat)
+        newList.add(0, newChat)
+        return newList
+    }
+
+
 }

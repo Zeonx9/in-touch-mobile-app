@@ -107,11 +107,19 @@ class StompApiImpl @Inject constructor(
     }
 
     override fun subscribeQueueMessages(selfId: Int, handler: (Message) -> Unit) {
-        subscribe("/user/${selfId}/queue/messages", Message::class, handler)
+        subscribe("/user/${selfId}/queue/messages", Message::class, handler,
+            {
+                Log.i(javaClass.name, "received new message id=${it.id}, text=${it.text}, author id=${it.author.id}")
+            }
+        )
     }
 
     override fun subscribeQueueChats(selfId: Int, handler: (Chat) -> Unit) {
-        subscribe("/user/${selfId}/queue/chats", Chat::class, handler)
+        subscribe("/user/${selfId}/queue/chats", Chat::class, handler,
+            {
+                Log.i(javaClass.name, "received new chat id=${it.id}, members=${it.members.size}")
+            }
+        )
     }
 
     override fun subscribeQueueReadNotifications(selfId: Int, handler: (ReadNotification) -> Unit) {

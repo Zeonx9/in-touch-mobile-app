@@ -7,17 +7,17 @@ import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class GsonLocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+class GsonLocalDateAdapter : JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
     @Synchronized
     override fun serialize(
-        date: LocalDateTime,
+        date: LocalDate,
         type: Type,
         jsonSerializationContext: JsonSerializationContext
     ): JsonElement {
-        return JsonPrimitive(date.format(DateTimeFormatter.ISO_DATE_TIME))
+        return JsonPrimitive(date.format(DateTimeFormatter.ISO_DATE))
     }
 
     @Synchronized
@@ -25,7 +25,7 @@ class GsonLocalDateTimeAdapter : JsonSerializer<LocalDateTime>, JsonDeserializer
         jsonElement: JsonElement,
         type: Type,
         jsonDeserializationContext: JsonDeserializationContext
-    ): LocalDateTime {
-        return LocalDateTime.parse(jsonElement.asString)
+    ): LocalDate {
+        return LocalDate.parse(jsonElement.asString)
     }
 }

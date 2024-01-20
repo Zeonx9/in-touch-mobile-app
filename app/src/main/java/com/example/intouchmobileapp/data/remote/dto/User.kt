@@ -1,7 +1,9 @@
 package com.example.intouchmobileapp.data.remote.dto
 
+import java.time.LocalDate
+
 data class User(
-    val dateOfBirth: String,
+    val dateOfBirth: LocalDate,
     val id: Int,
     val isOnline: Boolean,
     val patronymic: String,

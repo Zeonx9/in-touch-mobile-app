@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +39,7 @@ fun ChatListItem(
                 )
                 ChatInfo(
                     chatName = "${otherUser.realName} ${otherUser.surname}",
-                    lastMessageText = chat.lastMessage.text
+                    lastMessageText = chat.lastMessage?.text
                 )
             } else {
                 TextInCircle(
@@ -53,11 +51,11 @@ fun ChatListItem(
                 )
                 ChatInfo(
                     chatName = chat.group.name,
-                    lastMessageText = chat.lastMessage.text
+                    lastMessageText = chat.lastMessage?.text
                 )
             }
             ChatTimeUnreadCount(
-                lastInteractionTime = chat.lastMessage.dateTime,
+                lastInteractionTime = chat.lastMessage?.dateTime,
                 unreadCount = chat.unreadCounter
             )
         }
