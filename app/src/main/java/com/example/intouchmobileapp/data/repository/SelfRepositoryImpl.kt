@@ -16,19 +16,15 @@ class SelfRepositoryImpl : SelfRepository {
         token = data.token
     }
 
-    override fun getSelf(): User {
-        return self!!
-    }
+    override val user: User
+        get() = self!!
 
-    override fun getSelfId(): Int {
-        return self!!.id
-    }
+    override val selfId: Int
+        get() = user.id
 
-    override fun getCompanyId(): Int {
-        return company!!.id
-    }
+    override val authHeader: String
+        get() = "Bearer $token"
 
-    override fun getAuthHeader(): String {
-        return "Bearer $token"
-    }
+    override val companyId: Int
+        get() = company!!.id
 }

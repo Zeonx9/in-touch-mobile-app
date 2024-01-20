@@ -81,6 +81,12 @@ dependencies {
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
+
+    // stomp protocol
+    implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.5")
+
+
 }
 
 hilt {

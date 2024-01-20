@@ -15,11 +15,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatListViewModel @Inject constructor(
     private val getChatsUseCase: GetChatsUseCase,
-    private val selfRepository: SelfRepository
+    selfRepository: SelfRepository
 ) : ViewModel() {
 
     private val _state = mutableStateOf(ChatListState())
     val state: State<ChatListState> = _state
+    val selfId = selfRepository.selfId
 
     init {
         getChats()
@@ -47,9 +48,5 @@ class ChatListViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    fun getSelfId(): Int {
-        return selfRepository.getSelfId()
     }
 }

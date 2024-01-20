@@ -18,9 +18,10 @@ class LogInUseCase @Inject constructor(
             emit(Resource.Loading())
             val response = authApi.logIn(AuthRequest(login, password))
             selfRepository.setValues(response)
+            Log.d(javaClass.name, "send signal connection")
             emit(Resource.Success(true))
         } catch (e: Exception) {
-            Log.e("Log In Use Case", "exception caught", e)
+            Log.e(javaClass.name, "exception caught", e)
             emit(Resource.Error("error occurred: ${e.message}"))
         }
     }

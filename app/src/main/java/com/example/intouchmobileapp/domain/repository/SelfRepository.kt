@@ -5,12 +5,9 @@ import com.example.intouchmobileapp.data.remote.dto.User
 
 interface SelfRepository {
     fun setValues(data: AuthResponse)
+    val user: User
+    val selfId: Int
+    val companyId: Int
+    val authHeader: String
 
-    fun getSelf(): User
-
-    fun getSelfId(): Int
-
-    fun getCompanyId(): Int
-
-    fun getAuthHeader(): String
 }

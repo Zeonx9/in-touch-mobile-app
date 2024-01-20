@@ -41,7 +41,7 @@ fun ChatListScreen(
             items(state.chats) {chat ->
                 ChatListItem(
                     chat = chat,
-                    selfId = viewModel.getSelfId()
+                    selfId = viewModel.selfId
                 ) {
                     Log.d(javaClass.name, "clicked on item chat_id=${chat.id}")
                 }

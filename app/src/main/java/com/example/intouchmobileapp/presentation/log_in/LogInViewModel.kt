@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.use_case.login.LogInUseCase
+import com.example.intouchmobileapp.domain.use_case.login.StartStompConnectionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LogInViewModel @Inject constructor(
-    private val logInUseCase: LogInUseCase
+    private val logInUseCase: LogInUseCase,
+    private val startStompConnectionUseCase: StartStompConnectionUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(LogInState())
@@ -24,9 +26,11 @@ class LogInViewModel @Inject constructor(
             when(result) {
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
+                        error = "",
                         isLoading = false
                     )
                     successNavigation()
+                    startStompConnectionUseCase()
                 }
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
@@ -36,6 +40,7 @@ class LogInViewModel @Inject constructor(
                 }
                 is Resource.Loading -> {
                     _state.value = _state.value.copy(
+                        error = "",
                         isLoading = true
                     )
                 }

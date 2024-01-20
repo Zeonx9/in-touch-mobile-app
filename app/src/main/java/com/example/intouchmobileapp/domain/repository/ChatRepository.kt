@@ -7,4 +7,6 @@ interface ChatRepository {
     suspend fun getChats(): List<Chat>
 
     suspend fun getUnreadCounters(): List<UnreadCounter>
+
+    fun onNewChatReceived(chat: Chat)
 }
