@@ -27,7 +27,8 @@ fun RowScope.ChatInfo(
         Text(
             text = lastMessageText ?: "",
             style = MaterialTheme.typography.bodyMedium,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
         )
     }
 }

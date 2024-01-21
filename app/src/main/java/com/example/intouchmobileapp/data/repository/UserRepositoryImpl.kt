@@ -2,7 +2,7 @@ package com.example.intouchmobileapp.data.repository
 
 import com.example.intouchmobileapp.data.remote.api.UserApi
 import com.example.intouchmobileapp.data.remote.dto.ConnectEvent
-import com.example.intouchmobileapp.data.remote.dto.User
+import com.example.intouchmobileapp.domain.model.User
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import com.example.intouchmobileapp.domain.repository.UserRepository
 import javax.inject.Inject

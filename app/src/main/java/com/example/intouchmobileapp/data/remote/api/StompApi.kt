@@ -1,10 +1,10 @@
 package com.example.intouchmobileapp.data.remote.api
 
-import com.example.intouchmobileapp.data.remote.dto.Chat
+import com.example.intouchmobileapp.domain.model.Chat
 import com.example.intouchmobileapp.data.remote.dto.ConnectEvent
-import com.example.intouchmobileapp.data.remote.dto.Message
+import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.data.remote.dto.ReadNotification
-import com.example.intouchmobileapp.data.remote.dto.User
+import com.example.intouchmobileapp.domain.model.User
 
 
 interface StompApi {

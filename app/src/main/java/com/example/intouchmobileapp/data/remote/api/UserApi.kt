@@ -1,6 +1,6 @@
 package com.example.intouchmobileapp.data.remote.api
 
-import com.example.intouchmobileapp.data.remote.dto.User
+import com.example.intouchmobileapp.domain.model.User
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path

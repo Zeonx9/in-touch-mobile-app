@@ -1,7 +1,7 @@
 package com.example.intouchmobileapp.domain.repository
 
 import com.example.intouchmobileapp.data.remote.dto.AuthResponse
-import com.example.intouchmobileapp.data.remote.dto.User
+import com.example.intouchmobileapp.domain.model.User
 
 interface SelfRepository {
     fun setValues(data: AuthResponse)

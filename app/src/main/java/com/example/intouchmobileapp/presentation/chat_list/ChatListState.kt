@@ -1,6 +1,6 @@
 package com.example.intouchmobileapp.presentation.chat_list
 
-import com.example.intouchmobileapp.data.remote.dto.Chat
+import com.example.intouchmobileapp.domain.model.Chat
 
 data class ChatListState (
     val chats: List<Chat> = emptyList(),

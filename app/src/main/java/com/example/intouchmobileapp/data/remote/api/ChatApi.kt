@@ -1,6 +1,6 @@
 package com.example.intouchmobileapp.data.remote.api
 
-import com.example.intouchmobileapp.data.remote.dto.Chat
+import com.example.intouchmobileapp.domain.model.Chat
 import com.example.intouchmobileapp.data.remote.dto.UnreadCounter
 import retrofit2.http.GET
 import retrofit2.http.Header

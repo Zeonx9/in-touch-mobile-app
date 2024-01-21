@@ -1,4 +1,4 @@
-package com.example.intouchmobileapp.data.remote.dto
+package com.example.intouchmobileapp.domain.model
 
 import java.time.LocalDateTime
 

@@ -1,8 +1,8 @@
 package com.example.intouchmobileapp.data.repository
 
 import com.example.intouchmobileapp.data.remote.dto.AuthResponse
-import com.example.intouchmobileapp.data.remote.dto.Company
-import com.example.intouchmobileapp.data.remote.dto.User
+import com.example.intouchmobileapp.domain.model.Company
+import com.example.intouchmobileapp.domain.model.User
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 
 class SelfRepositoryImpl : SelfRepository {

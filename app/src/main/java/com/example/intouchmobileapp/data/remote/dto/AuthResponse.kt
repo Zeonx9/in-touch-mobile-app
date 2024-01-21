@@ -1,5 +1,7 @@
 package com.example.intouchmobileapp.data.remote.dto
 
+import com.example.intouchmobileapp.domain.model.Company
+import com.example.intouchmobileapp.domain.model.User
 import com.google.gson.annotations.SerializedName
 
 data class AuthResponse(

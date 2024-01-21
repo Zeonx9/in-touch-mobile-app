@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.intouchmobileapp.data.remote.dto.Chat
+import com.example.intouchmobileapp.domain.model.Chat
 
 @Composable
 fun ChatListItem(
@@ -28,32 +28,17 @@ fun ChatListItem(
                 .fillMaxWidth()
                 .padding(5.dp)
         ) {
-            if (chat.isPrivate) {
-                val otherUser = chat.members.find { it.id != selfId }!!
-                TextInCircle(
-                    text = "${otherUser.realName[0]}${otherUser.surname[0]}",
-                    background = Color.Gray,
-                    color = Color.White,
-                    size = 60,
-                    textSize = 30
-                )
-                ChatInfo(
-                    chatName = "${otherUser.realName} ${otherUser.surname}",
-                    lastMessageText = chat.lastMessage?.text
-                )
-            } else {
-                TextInCircle(
-                    text = chat.group!!.name[0].uppercase(),
-                    background = Color.Gray,
-                    color = Color.White,
-                    size = 60,
-                    textSize = 30
-                )
-                ChatInfo(
-                    chatName = chat.group.name,
-                    lastMessageText = chat.lastMessage?.text
-                )
-            }
+            TextInCircle(
+                text = chat.getAbbreviation(selfId),
+                background = Color.Gray,
+                color = Color.White,
+                size = 60,
+                textSize = 30
+            )
+            ChatInfo(
+                chatName = chat.getName(selfId),
+                lastMessageText = chat.lastMessage?.text
+            )
             ChatTimeUnreadCount(
                 lastInteractionTime = chat.lastMessage?.dateTime,
                 unreadCount = chat.unreadCounter

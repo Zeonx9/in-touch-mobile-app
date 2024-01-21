@@ -1,8 +1,8 @@
 package com.example.intouchmobileapp.data.repository
 
 import com.example.intouchmobileapp.data.remote.api.ChatApi
-import com.example.intouchmobileapp.data.remote.dto.Chat
-import com.example.intouchmobileapp.data.remote.dto.Message
+import com.example.intouchmobileapp.domain.model.Chat
+import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.repository.ChatRepository
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import kotlinx.coroutines.flow.MutableStateFlow

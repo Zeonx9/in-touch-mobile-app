@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.chat_list.components.ChatListItem
 
 @Composable
@@ -44,6 +45,7 @@ fun ChatListScreen(
                     selfId = viewModel.selfId
                 ) {
                     Log.d(javaClass.name, "clicked on item chat_id=${chat.id}")
+                    navController.navigate(route = Screen.ChatScreen.withArgs(chat.id))
                 }
                 Spacer(modifier = Modifier.height(5.dp))
             }

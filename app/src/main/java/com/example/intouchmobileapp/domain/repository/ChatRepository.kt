@@ -1,7 +1,7 @@
 package com.example.intouchmobileapp.domain.repository
 
-import com.example.intouchmobileapp.data.remote.dto.Chat
-import com.example.intouchmobileapp.data.remote.dto.Message
+import com.example.intouchmobileapp.domain.model.Chat
+import com.example.intouchmobileapp.domain.model.Message
 import kotlinx.coroutines.flow.StateFlow
 
 interface ChatRepository {
