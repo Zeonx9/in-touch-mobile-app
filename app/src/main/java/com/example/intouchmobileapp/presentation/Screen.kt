@@ -4,6 +4,8 @@ sealed class Screen(val route: String) {
     data object LogInScreen : Screen("log_in_screen")
     data object ChatListScreen : Screen("chat_list_screen")
     data object ChatScreen : Screen("chat_screen")
+    data object UserListScreen : Screen("user_list_screen")
+    data object SettingsScreen : Screen("settings_screen")
 
     fun withArgs(vararg args: Any): String {
         return buildString {

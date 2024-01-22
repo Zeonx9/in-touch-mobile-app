@@ -16,7 +16,9 @@ import com.example.intouchmobileapp.common.Constants.PARAM_CHAT_ID
 import com.example.intouchmobileapp.presentation.chat.ChatScreen
 import com.example.intouchmobileapp.presentation.chat_list.ChatListScreen
 import com.example.intouchmobileapp.presentation.log_in.LogInScreen
+import com.example.intouchmobileapp.presentation.settings.SettingsScreen
 import com.example.intouchmobileapp.presentation.ui.theme.InTouchMobileAppTheme
+import com.example.intouchmobileapp.presentation.user_list.UserListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,6 +55,16 @@ class MainActivity : ComponentActivity() {
                             )
                         ) {
                             ChatScreen(navController = navController)
+                        }
+                        composable(
+                            route = Screen.UserListScreen.route
+                        ) {
+                            UserListScreen(navController = navController)
+                        }
+                        composable(
+                            route = Screen.SettingsScreen.route
+                        ) {
+                            SettingsScreen(navController = navController)
                         }
                     }
                 }

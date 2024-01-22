@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
@@ -20,6 +21,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.intouchmobileapp.presentation.chat.components.MessageListItem
 import com.example.intouchmobileapp.presentation.chat_list.components.TextInCircle
+import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,16 +98,25 @@ fun ChatScreen(
             }
         }
     ) {
-        LazyColumn (
-            Modifier
-                .padding(it)
-                .padding(horizontal = 10.dp)
-        ) {
-            items(state.messages) { message ->
-                MessageListItem(
-                    message = message,
-                    fromOtherUser = viewModel.selfId != message.author.id
-                )
+        LoadingErrorPlaceHolder(error = state.error, isLoading = state.isLoading) {
+            val columnState = rememberLazyListState()
+            LaunchedEffect(state.messages){
+                if (state.messages.isNotEmpty()) {
+                    columnState.scrollToItem(state.messages.size - 1)
+                }
+            }
+            LazyColumn (
+                state = columnState,
+                modifier = Modifier
+                    .padding(it)
+                    .padding(horizontal = 10.dp)
+            ) {
+                items(state.messages) { message ->
+                    MessageListItem(
+                        message = message,
+                        fromOtherUser = viewModel.selfId != message.author.id
+                    )
+                }
             }
         }
     }

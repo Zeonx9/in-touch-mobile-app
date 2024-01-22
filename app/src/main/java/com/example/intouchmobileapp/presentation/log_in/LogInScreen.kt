@@ -1,7 +1,6 @@
 package com.example.intouchmobileapp.presentation.log_in
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,7 +55,11 @@ fun LogInScreen (
         Button(
             onClick = {
                 logInViewModel.logIn {
-                    navController.navigate(Screen.ChatListScreen.route)
+                    navController.navigate(Screen.ChatListScreen.route) {
+                        popUpTo(Screen.LogInScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         ) {
