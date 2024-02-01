@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.intouchmobileapp.R
-import com.example.intouchmobileapp.presentation.Screen
 
 @Composable
 fun PreLogInScreen(
@@ -26,22 +25,7 @@ fun PreLogInScreen(
     navController: NavController
 ) {
     LaunchedEffect(Unit) {
-        preLogInViewModel.tryLogin(
-            successNavigation = {
-                navController.navigate(Screen.ChatListScreen.route) {
-                    popUpTo(Screen.PreLogInScreen.route) {
-                        inclusive = true
-                    }
-                }
-            },
-            errorNavigation = {
-                navController.navigate(Screen.LogInScreen.route)  {
-                    popUpTo(Screen.PreLogInScreen.route) {
-                        inclusive = true
-                    }
-                }
-            }
-        )
+        preLogInViewModel.tryLogin(navController)
     }
 
     Column (

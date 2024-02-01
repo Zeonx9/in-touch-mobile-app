@@ -40,6 +40,7 @@ class MessageRepositoryImpl @Inject constructor(
         return newList
     }
 
-
-
+    override fun clear() {
+        messagesByChatId.clear()
+    }
 }

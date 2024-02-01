@@ -20,4 +20,8 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
+    override fun clear() {
+
+    }
+
 }

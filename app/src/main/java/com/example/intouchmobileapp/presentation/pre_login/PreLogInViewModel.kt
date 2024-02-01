@@ -3,10 +3,13 @@ package com.example.intouchmobileapp.presentation.pre_login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.repository.PreferencesRepository
 import com.example.intouchmobileapp.domain.use_case.login.LogInUseCase
 import com.example.intouchmobileapp.domain.use_case.login.StartStompConnectionUseCase
+import com.example.intouchmobileapp.presentation.Screen
+import com.example.intouchmobileapp.presentation.common.navigateAndReplaceStartDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,13 +31,13 @@ class PreLogInViewModel @Inject constructor(
         preferencesRepository.preferences.first()
     }
 
-    fun tryLogin(successNavigation: () -> Unit, errorNavigation: () -> Unit) {
+    fun tryLogin(navController: NavController) {
         Log.i(javaClass.name, "logged = ${preferences.isLogged}, login = ${preferences.login}, password = ${preferences.password}")
 
         if (!preferences.isLogged) {
             viewModelScope.launch {
                 delay(300)
-                errorNavigation()
+                navController.navigateAndReplaceStartDestination(Screen.LogInScreen.route)
             }
             return
         }
@@ -42,10 +45,10 @@ class PreLogInViewModel @Inject constructor(
         logInUseCase(preferences.login, preferences.password).onEach {
             when(it) {
                 is Resource.Error ->  {
-                    errorNavigation()
+                    navController.navigateAndReplaceStartDestination(Screen.LogInScreen.route)
                 }
                 is Resource.Success -> {
-                    successNavigation()
+                    navController.navigateAndReplaceStartDestination(Screen.ChatListScreen.route)
                     startStompConnectionUseCase()
                 }
                 else -> Unit

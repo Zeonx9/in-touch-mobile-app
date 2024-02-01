@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.chat_list.components.ChatListItem
 import com.example.intouchmobileapp.presentation.common.BottomNavBar
 import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
@@ -57,8 +56,7 @@ fun ChatListScreen(
                         chat = chat,
                         selfId = viewModel.selfId
                     ) {
-                        navController.navigate(route = Screen.ChatScreen.withArgs(chat.id))
-                        viewModel.sendReadSignal(chat.id)
+                        viewModel.openChat(navController, chat.id)
                     }
                 }
             }

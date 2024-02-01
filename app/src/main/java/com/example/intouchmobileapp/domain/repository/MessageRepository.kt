@@ -11,5 +11,5 @@ interface MessageRepository {
     fun chatNeedToBeFetched(chatId: Int): Boolean
 
     suspend fun fetchMessagesByChatId(chatId: Int)
-
+    fun clear()
 }

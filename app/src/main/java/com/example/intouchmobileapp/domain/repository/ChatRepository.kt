@@ -14,4 +14,5 @@ interface ChatRepository {
     fun onNewChatReceived(chat: Chat)
     fun onNewMessageReceived(message: Message)
     fun onReadNotificationReceived(notification: ReadNotification)
+    fun clear()
 }

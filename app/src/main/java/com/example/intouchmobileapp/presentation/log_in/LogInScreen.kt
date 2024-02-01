@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.intouchmobileapp.presentation.Screen
 
 @Composable
 fun LogInScreen (
@@ -54,13 +53,7 @@ fun LogInScreen (
         Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = {
-                logInViewModel.logIn {
-                    navController.navigate(Screen.ChatListScreen.route) {
-                        popUpTo(Screen.LogInScreen.route) {
-                            inclusive = true
-                        }
-                    }
-                }
+                logInViewModel.logIn(navController)
             }
         ) {
             Text(text = "log in")

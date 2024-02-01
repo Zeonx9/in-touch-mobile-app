@@ -5,10 +5,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.use_case.login.LogInUseCase
 import com.example.intouchmobileapp.domain.use_case.login.SaveCredentialsUseCase
 import com.example.intouchmobileapp.domain.use_case.login.StartStompConnectionUseCase
+import com.example.intouchmobileapp.presentation.Screen
+import com.example.intouchmobileapp.presentation.common.navigateAndReplaceStartDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,7 +28,7 @@ class LogInViewModel @Inject constructor(
     private val _state = mutableStateOf(LogInState())
     val state: State<LogInState> = _state
 
-    fun logIn(successNavigation: () -> Unit) {
+    fun logIn(navController: NavController) {
 
         logInUseCase(state.value.login, state.value.password).onEach { result ->
             when(result) {
@@ -39,7 +42,12 @@ class LogInViewModel @Inject constructor(
                     }.invokeOnCompletion {
                         Log.i(javaClass.name, "saveCredentialsUseCase finished")
                     }
-                    successNavigation()
+                    navController.navigate(Screen.ChatListScreen.route) {
+                        popUpTo(Screen.LogInScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                    navController.navigateAndReplaceStartDestination(Screen.ChatListScreen.route)
                     startStompConnectionUseCase()
                 }
                 is Resource.Error -> {

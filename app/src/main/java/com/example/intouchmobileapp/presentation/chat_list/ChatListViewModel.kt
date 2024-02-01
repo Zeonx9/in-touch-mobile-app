@@ -5,11 +5,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.model.Chat
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import com.example.intouchmobileapp.domain.use_case.get_chats.FetchChatsUseCase
 import com.example.intouchmobileapp.domain.use_case.send_read_signal.SendReadSignalUseCase
+import com.example.intouchmobileapp.presentation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
@@ -69,7 +71,8 @@ class ChatListViewModel @Inject constructor(
         }?.launchIn(viewModelScope)
     }
 
-    fun sendReadSignal(chatId: Int) {
+    fun openChat(navController: NavController, chatId: Int) {
+        navController.navigate(route = Screen.ChatScreen.withArgs(chatId))
         sendReadSignalUseCase(chatId, selfId)
     }
 }

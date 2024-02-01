@@ -5,6 +5,9 @@ import com.example.intouchmobileapp.domain.model.User
 
 interface SelfRepository {
     fun setValues(data: AuthResponse)
+
+    fun clear()
+
     val user: User
     val selfId: Int
     val companyId: Int

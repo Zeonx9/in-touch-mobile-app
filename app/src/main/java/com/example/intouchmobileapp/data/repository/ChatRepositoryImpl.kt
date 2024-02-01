@@ -81,4 +81,10 @@ class ChatRepositoryImpl @Inject constructor(
         }
         return newChats
     }
+
+    override fun clear() {
+        _chats.update {
+            emptyList()
+        }
+    }
 }

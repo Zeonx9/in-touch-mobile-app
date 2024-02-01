@@ -16,6 +16,12 @@ class SelfRepositoryImpl : SelfRepository {
         token = data.token
     }
 
+    override fun clear() {
+        self = null
+        company = null
+        token = null
+    }
+
     override val user: User
         get() = self!!
 
@@ -27,4 +33,5 @@ class SelfRepositoryImpl : SelfRepository {
 
     override val companyId: Int
         get() = company!!.id
+
 }
