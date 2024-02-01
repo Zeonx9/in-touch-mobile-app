@@ -1,6 +1,7 @@
 package com.example.intouchmobileapp.data.repository
 
 import com.example.intouchmobileapp.data.remote.api.ChatApi
+import com.example.intouchmobileapp.data.remote.dto.ReadNotification
 import com.example.intouchmobileapp.domain.model.Chat
 import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.repository.ChatRepository
@@ -30,6 +31,11 @@ class ChatRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override fun needToFetchChats(): Boolean {
+        return chats.value.isEmpty()
+    }
+
     override fun onNewChatReceived(chat: Chat) {
         _chats.update { addNewChat(it, chat) }
     }
@@ -60,5 +66,19 @@ class ChatRepositoryImpl @Inject constructor(
         return newList
     }
 
+    override fun onReadNotificationReceived(notification: ReadNotification) {
+        if (notification.userId == selfRepository.selfId) {
+            _chats.update { markChatAsRead(it, notification) }
+        }
+    }
 
+    private fun markChatAsRead(chats: List<Chat>, notification: ReadNotification): List<Chat> {
+        val newChats = ArrayList(chats)
+        val chat = newChats.find { it.id == notification.chatId }
+        chat?.let {
+            val index = newChats.indexOf(it)
+            newChats[index] = chat.copy(unreadCounter = 0)
+        }
+        return newChats
+    }
 }

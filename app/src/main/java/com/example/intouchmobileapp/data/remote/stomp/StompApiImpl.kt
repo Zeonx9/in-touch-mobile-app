@@ -107,7 +107,7 @@ class StompApiImpl @Inject constructor(
     }
 
     override fun subscribeQueueMessages(selfId: Int, handler: (Message) -> Unit) {
-        subscribe("/user/${selfId}/queue/messages", Message::class, handler,
+        subscribe("/user/$selfId/queue/messages", Message::class, handler,
             {
                 Log.i(javaClass.name, "received new message id=${it.id}, text=${it.text}, author id=${it.author.id}")
             }
@@ -115,7 +115,7 @@ class StompApiImpl @Inject constructor(
     }
 
     override fun subscribeQueueChats(selfId: Int, handler: (Chat) -> Unit) {
-        subscribe("/user/${selfId}/queue/chats", Chat::class, handler,
+        subscribe("/user/$selfId/queue/chats", Chat::class, handler,
             {
                 Log.i(javaClass.name, "received new chat id=${it.id}, members=${it.members.size}")
             }
@@ -123,7 +123,11 @@ class StompApiImpl @Inject constructor(
     }
 
     override fun subscribeQueueReadNotifications(selfId: Int, handler: (ReadNotification) -> Unit) {
-        subscribe("/user/%d/queue/read_notifications", ReadNotification::class, handler)
+        subscribe("/user/$selfId/queue/read_notifications", ReadNotification::class, handler,
+            {
+                Log.i(javaClass.name, "received new read notification chatId=${it.chatId} userId=${it.userId}")
+            }
+        )
     }
 
     override fun sendConnectSignal(user: User) {

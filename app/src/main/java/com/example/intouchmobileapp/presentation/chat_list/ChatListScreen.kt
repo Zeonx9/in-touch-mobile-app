@@ -58,6 +58,7 @@ fun ChatListScreen(
                         selfId = viewModel.selfId
                     ) {
                         navController.navigate(route = Screen.ChatScreen.withArgs(chat.id))
+                        viewModel.sendReadSignal(chat.id)
                     }
                 }
             }

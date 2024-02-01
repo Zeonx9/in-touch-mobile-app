@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.di
 
+import android.content.Context
 import com.example.intouchmobileapp.common.Constants
 import com.example.intouchmobileapp.data.converter.GsonLocalDateAdapter
 import com.example.intouchmobileapp.data.converter.GsonLocalDateTimeAdapter
@@ -13,16 +14,19 @@ import com.example.intouchmobileapp.data.remote.api.UserApi
 import com.example.intouchmobileapp.data.remote.stomp.StompApiImpl
 import com.example.intouchmobileapp.data.repository.ChatRepositoryImpl
 import com.example.intouchmobileapp.data.repository.MessageRepositoryImpl
+import com.example.intouchmobileapp.data.repository.PreferencesRepositoryImpl
 import com.example.intouchmobileapp.data.repository.SelfRepositoryImpl
 import com.example.intouchmobileapp.data.repository.UserRepositoryImpl
 import com.example.intouchmobileapp.domain.repository.ChatRepository
 import com.example.intouchmobileapp.domain.repository.MessageRepository
+import com.example.intouchmobileapp.domain.repository.PreferencesRepository
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import com.example.intouchmobileapp.domain.repository.UserRepository
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -96,6 +100,12 @@ class AppModule {
     @Singleton
     fun providesSelfRepository(): SelfRepository {
         return SelfRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun providePreferencesRepository(@ApplicationContext context: Context) : PreferencesRepository {
+        return PreferencesRepositoryImpl(context)
     }
 
     @Provides

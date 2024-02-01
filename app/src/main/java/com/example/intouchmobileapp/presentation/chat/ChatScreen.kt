@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.intouchmobileapp.presentation.chat.components.MessageListItem
-import com.example.intouchmobileapp.presentation.chat_list.components.TextInCircle
+import com.example.intouchmobileapp.presentation.common.TextInCircle
 import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,8 +54,8 @@ fun ChatScreen(
                              text = chat.getAbbreviation(viewModel.selfId),
                              background = Color.Gray,
                              color = Color.White,
-                             size = 60,
-                             textSize = 30
+                             size = 40,
+                             textSize = 20
                          )
                          Spacer(modifier = Modifier.width(10.dp))
                          Text(text = chat.getName(viewModel.selfId))

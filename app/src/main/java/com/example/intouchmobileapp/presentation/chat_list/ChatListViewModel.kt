@@ -9,6 +9,7 @@ import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.model.Chat
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import com.example.intouchmobileapp.domain.use_case.get_chats.FetchChatsUseCase
+import com.example.intouchmobileapp.domain.use_case.send_read_signal.SendReadSignalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatListViewModel @Inject constructor(
     private val fetchChatsUseCase: FetchChatsUseCase,
+    private val sendReadSignalUseCase: SendReadSignalUseCase,
     selfRepository: SelfRepository
 ) : ViewModel() {
 
@@ -65,5 +67,9 @@ class ChatListViewModel @Inject constructor(
                 chats = it
             )
         }?.launchIn(viewModelScope)
+    }
+
+    fun sendReadSignal(chatId: Int) {
+        sendReadSignalUseCase(chatId, selfId)
     }
 }

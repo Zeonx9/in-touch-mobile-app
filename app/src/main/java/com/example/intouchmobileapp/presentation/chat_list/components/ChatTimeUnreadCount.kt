@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import com.example.intouchmobileapp.presentation.common.TextInCircle
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

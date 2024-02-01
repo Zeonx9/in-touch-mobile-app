@@ -14,8 +14,10 @@ class FetchChatsUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Resource<StateFlow<List<Chat>>>> = flow {
         try {
-            emit(Resource.Loading())
-            chatRepository.fetchChats()
+            if (chatRepository.needToFetchChats()) {
+                emit(Resource.Loading())
+                chatRepository.fetchChats()
+            }
             emit(Resource.Success(chatRepository.chats))
         } catch (e: Exception) {
             emit(Resource.Error(e.message!!))

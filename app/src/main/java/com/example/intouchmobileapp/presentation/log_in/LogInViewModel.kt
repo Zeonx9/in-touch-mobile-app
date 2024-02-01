@@ -1,27 +1,32 @@
 package com.example.intouchmobileapp.presentation.log_in
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.use_case.login.LogInUseCase
+import com.example.intouchmobileapp.domain.use_case.login.SaveCredentialsUseCase
 import com.example.intouchmobileapp.domain.use_case.login.StartStompConnectionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LogInViewModel @Inject constructor(
     private val logInUseCase: LogInUseCase,
-    private val startStompConnectionUseCase: StartStompConnectionUseCase
+    private val startStompConnectionUseCase: StartStompConnectionUseCase,
+    private val saveCredentialsUseCase: SaveCredentialsUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(LogInState())
     val state: State<LogInState> = _state
 
     fun logIn(successNavigation: () -> Unit) {
+
         logInUseCase(state.value.login, state.value.password).onEach { result ->
             when(result) {
                 is Resource.Success -> {
@@ -29,6 +34,11 @@ class LogInViewModel @Inject constructor(
                         error = "",
                         isLoading = false
                     )
+                    viewModelScope.launch {
+                        saveCredentialsUseCase(state.value.login, state.value.password)
+                    }.invokeOnCompletion {
+                        Log.i(javaClass.name, "saveCredentialsUseCase finished")
+                    }
                     successNavigation()
                     startStompConnectionUseCase()
                 }

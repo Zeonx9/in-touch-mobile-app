@@ -23,6 +23,7 @@ class StartStompConnectionUseCase @Inject constructor(
             messageRepository.onNewMessageReceived(it)
             chatRepository.onNewMessageReceived(it)
         }
+        stompApi.subscribeQueueReadNotifications(selfRepository.selfId, chatRepository::onReadNotificationReceived)
         stompApi.sendConnectSignal(selfRepository.user)
         Log.d(javaClass.name, "initiating stomp connection")
     }

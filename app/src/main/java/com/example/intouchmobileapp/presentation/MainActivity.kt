@@ -16,6 +16,7 @@ import com.example.intouchmobileapp.common.Constants.PARAM_CHAT_ID
 import com.example.intouchmobileapp.presentation.chat.ChatScreen
 import com.example.intouchmobileapp.presentation.chat_list.ChatListScreen
 import com.example.intouchmobileapp.presentation.log_in.LogInScreen
+import com.example.intouchmobileapp.presentation.pre_login.PreLogInScreen
 import com.example.intouchmobileapp.presentation.settings.SettingsScreen
 import com.example.intouchmobileapp.presentation.ui.theme.InTouchMobileAppTheme
 import com.example.intouchmobileapp.presentation.user_list.UserListScreen
@@ -34,8 +35,11 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.LogInScreen.route
+                        startDestination = Screen.PreLogInScreen.route
                     ) {
+                        composable(Screen.PreLogInScreen.route) {
+                            PreLogInScreen(navController = navController)
+                        }
                         composable(
                             route = Screen.LogInScreen.route
                         ) {

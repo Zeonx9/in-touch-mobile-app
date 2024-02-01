@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.data.remote.dto
 
-class ReadNotification {
-
-}
+data class ReadNotification (
+    val userId: Int,
+    val chatId: Int
+)
