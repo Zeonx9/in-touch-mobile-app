@@ -6,7 +6,10 @@
     <string name="password_text_field_label">password</string>
     <string name="log_in_button_text">log in</string>
     <string name="chats_screen_title">Chats</string>
-    <string name="message_text_field_placeholder_text">type message...</string>
+    <string name="message_text_field_placeholder_text">type message…</string>
     <string name="up_button_description">back Button</string>
     <string name="send_icon_button_description">send button</string>
+    <string name="user_list_screen_title">Users</string>
+    <string name="log_out_button_text">Log out</string>
+    <string name="settings_screen_title">Settings</string>
 </resources>

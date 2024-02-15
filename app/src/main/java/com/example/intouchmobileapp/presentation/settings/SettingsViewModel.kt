@@ -17,7 +17,12 @@ class SettingsViewModel @Inject constructor(
     private val stopStompConnectionUseCase: StopStompConnectionUseCase,
 ) : ViewModel() {
 
-    fun logOut (navController: NavController) {
+    fun onEvent(event: SettingsScreenEvent) {
+        when(event) {
+            is SettingsScreenEvent.LogOutClickedEvent -> logOut(event.navController)
+        }
+    }
+    private fun logOut (navController: NavController) {
         stopStompConnectionUseCase()
         viewModelScope.launch {
             logOutUseCase()

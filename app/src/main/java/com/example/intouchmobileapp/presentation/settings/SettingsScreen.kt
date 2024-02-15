@@ -12,27 +12,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import com.example.intouchmobileapp.R
+import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.common.BottomNavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel: SettingsViewModel = hiltViewModel()
+    onEvent: (SettingsScreenEvent) -> Unit
 ) {
     Scaffold (
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "Settings")
-                }
+                title = { Text(stringResource(R.string.settings_screen_title)) }
             )
         },
-        bottomBar = {
-            BottomNavBar(navController = navController)
-        }
+        bottomBar = { BottomNavBar(navController = navController) }
     ) {
         Column (
             verticalArrangement = Arrangement.Center,
@@ -41,12 +42,18 @@ fun SettingsScreen(
                 .padding(it)
                 .fillMaxSize()
         ) {
-            Text(text = "settings will be here...")
-            Button(onClick = {
-                viewModel.logOut(navController)
-            }) {
-                Text(text = "Log out")
+            Button(onClick = { onEvent(SettingsScreenEvent.LogOutClickedEvent(navController)) }) {
+                Text(text = stringResource(R.string.log_out_button_text))
             }
         }
+    }
+}
+
+fun NavGraphBuilder.settingsComposable(navController: NavController) {
+    composable(
+        route = Screen.SettingsScreen.route
+    ) {
+        val viewModel: SettingsViewModel = hiltViewModel()
+        SettingsScreen(navController, viewModel::onEvent)
     }
 }

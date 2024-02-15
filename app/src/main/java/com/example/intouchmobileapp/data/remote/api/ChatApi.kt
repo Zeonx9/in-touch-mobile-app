@@ -18,4 +18,11 @@ interface ChatApi {
         @Path("id") selfId: Int,
         @Header("Authorization") authHeader: String
     ): List<UnreadCounter>
+
+    @GET("private_chat/{id1}/{id2}")
+    suspend fun getPrivateChat(
+        @Path("id1") selfId: Int,
+        @Path("id2") otherUserId: Int,
+        @Header("Authorization") authHeader: String
+    ): Chat
 }

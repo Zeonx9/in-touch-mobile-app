@@ -56,7 +56,7 @@ fun ChatListScreen(
                         chat = chat,
                         selfId = state.selfId
                     ) {
-                        onEvent(ChatListScreenEvent.ChatClicked(navController, chat.id))
+                        onEvent(ChatListScreenEvent.ChatClicked(navController, it))
                     }
                 }
             }

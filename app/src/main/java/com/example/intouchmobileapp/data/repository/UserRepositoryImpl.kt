@@ -5,6 +5,9 @@ import com.example.intouchmobileapp.data.remote.dto.ConnectEvent
 import com.example.intouchmobileapp.domain.model.User
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import com.example.intouchmobileapp.domain.repository.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -12,8 +15,19 @@ class UserRepositoryImpl @Inject constructor(
     private val selfRepository: SelfRepository
 ) : UserRepository {
 
-    override suspend fun getUsers(): List<User> {
-        return userApi.getUsers(selfRepository.selfId, selfRepository.authHeader)
+    private val _users: MutableStateFlow<List<User>> = MutableStateFlow(emptyList())
+    override val users = _users.asStateFlow()
+
+    override suspend fun fetchUsers() {
+        val usersFromApi = userApi.getUsers(selfRepository.companyId, selfRepository.authHeader)
+            .filter {
+                it.id != selfRepository.selfId
+            }
+        _users.update { usersFromApi }
+    }
+
+    override fun needToFetch(): Boolean {
+        return users.value.isEmpty()
     }
 
     override fun onNewUserConnected(event: ConnectEvent) {
@@ -21,7 +35,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun clear() {
-
+        _users.update { emptyList() }
     }
 
 }

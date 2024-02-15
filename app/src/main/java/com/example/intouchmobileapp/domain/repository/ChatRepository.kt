@@ -9,8 +9,8 @@ interface ChatRepository {
 
     val chats: StateFlow<List<Chat>>
     suspend fun fetchChats()
+    suspend fun fetchPrivateChat(otherUserId: Int): Chat
     fun needToFetchChats(): Boolean
-
     fun onNewChatReceived(chat: Chat)
     fun onNewMessageReceived(message: Message)
     fun onReadNotificationReceived(notification: ReadNotification)

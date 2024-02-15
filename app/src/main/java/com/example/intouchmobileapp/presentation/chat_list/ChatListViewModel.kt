@@ -33,7 +33,7 @@ class ChatListViewModel @Inject constructor(
 
     fun onEvent(event: ChatListScreenEvent) {
         when(event) {
-            is ChatListScreenEvent.ChatClicked -> openChat(event.navController, event.chatId)
+            is ChatListScreenEvent.ChatClicked -> openChat(event.navController, event.chat.id)
         }
     }
 

@@ -7,7 +7,6 @@ import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.repository.ChatRepository
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -31,6 +30,10 @@ class ChatRepositoryImpl @Inject constructor(
                 it.copy(unreadCounter = count)
             }
         }
+    }
+
+    override suspend fun fetchPrivateChat(otherUserId: Int): Chat {
+        return chatApi.getPrivateChat(selfRepository.selfId, otherUserId, selfRepository.authHeader)
     }
 
     override fun needToFetchChats(): Boolean {
