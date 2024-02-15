@@ -5,5 +5,6 @@ import com.example.intouchmobileapp.domain.model.Chat
 data class ChatListState (
     val chats: List<Chat> = emptyList(),
     val error: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val selfId: Int = -1
 )

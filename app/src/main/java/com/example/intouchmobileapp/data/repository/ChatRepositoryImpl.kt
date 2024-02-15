@@ -8,6 +8,7 @@ import com.example.intouchmobileapp.domain.repository.ChatRepository
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class ChatRepositoryImpl @Inject constructor(
 ): ChatRepository {
 
     private val _chats: MutableStateFlow<List<Chat>> = MutableStateFlow(emptyList())
-    override val chats: StateFlow<List<Chat>> = _chats
+    override val chats = _chats.asStateFlow()
 
     override suspend fun fetchChats() {
         val chats = chatApi.getChatsOfUser(selfRepository.selfId, selfRepository.authHeader)

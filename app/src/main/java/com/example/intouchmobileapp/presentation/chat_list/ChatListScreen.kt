@@ -13,9 +13,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import com.example.intouchmobileapp.R
+import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.chat_list.components.ChatListItem
 import com.example.intouchmobileapp.presentation.common.BottomNavBar
 import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
@@ -24,42 +29,46 @@ import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
 @Composable
 fun ChatListScreen(
     navController: NavController,
-    viewModel: ChatListViewModel = hiltViewModel()
+    state: ChatListState,
+    onEvent: (ChatListScreenEvent) -> Unit,
 ) {
-    val state = viewModel.state.value
-
     Scaffold (
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.DarkGray
                 ),
-                title = {
-                    Text(text = "Chats")
-                }
+                title = { Text(stringResource(R.string.chats_screen_title)) }
             )
         },
-        bottomBar = {
-            BottomNavBar(navController = navController)
-        }
-    ) {
+        bottomBar = { BottomNavBar(navController) }
+    ) { paddingValues ->
         LoadingErrorPlaceHolder(error = state.error, isLoading = state.isLoading) {
             LazyColumn(
+                contentPadding = paddingValues,
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 modifier = Modifier
-                    .padding(it)
                     .padding(10.dp)
                     .fillMaxWidth()
             ) {
                 items(state.chats) {chat ->
                     ChatListItem(
                         chat = chat,
-                        selfId = viewModel.selfId
+                        selfId = state.selfId
                     ) {
-                        viewModel.openChat(navController, chat.id)
+                        onEvent(ChatListScreenEvent.ChatClicked(navController, chat.id))
                     }
                 }
             }
         }
+    }
+}
+
+fun NavGraphBuilder.chatListScreenComposable(navController: NavController) {
+    composable(
+        route = Screen.ChatListScreen.route
+    ) {
+        val viewModel: ChatListViewModel = hiltViewModel()
+        ChatListScreen(navController, viewModel.state.value, viewModel::onEvent)
     }
 }

@@ -1,6 +1,5 @@
 package com.example.intouchmobileapp.domain.use_case.login
 
-import android.util.Log
 import com.example.intouchmobileapp.data.remote.api.StompApi
 import com.example.intouchmobileapp.domain.repository.ChatRepository
 import com.example.intouchmobileapp.domain.repository.MessageRepository
@@ -17,7 +16,6 @@ class StartStompConnectionUseCase @Inject constructor(
 ) {
     operator fun invoke() {
         stompApi.connect()
-        Log.i(javaClass.name, "initiating stomp connection")
         stompApi.subscribeTopicConnection(selfRepository.companyId, userRepository::onNewUserConnected)
         stompApi.subscribeQueueChats(selfRepository.selfId, chatRepository::onNewChatReceived)
         stompApi.subscribeQueueMessages(selfRepository.selfId) {
@@ -26,6 +24,5 @@ class StartStompConnectionUseCase @Inject constructor(
         }
         stompApi.subscribeQueueReadNotifications(selfRepository.selfId, chatRepository::onReadNotificationReceived)
         stompApi.sendConnectSignal(selfRepository.user)
-        Log.d(javaClass.name, "initiating stomp connection")
     }
 }

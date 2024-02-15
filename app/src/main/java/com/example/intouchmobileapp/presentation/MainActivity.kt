@@ -17,13 +17,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.intouchmobileapp.common.Constants.PARAM_CHAT_ID
-import com.example.intouchmobileapp.presentation.Screen.ChatListScreen
 import com.example.intouchmobileapp.presentation.Screen.ChatScreen
 import com.example.intouchmobileapp.presentation.Screen.SettingsScreen
 import com.example.intouchmobileapp.presentation.Screen.SplashScreen
 import com.example.intouchmobileapp.presentation.Screen.UserListScreen
 import com.example.intouchmobileapp.presentation.chat.ChatScreen
-import com.example.intouchmobileapp.presentation.chat_list.ChatListScreen
+import com.example.intouchmobileapp.presentation.chat_list.chatListScreenComposable
 import com.example.intouchmobileapp.presentation.log_in.logInScreenComposable
 import com.example.intouchmobileapp.presentation.settings.SettingsScreen
 import com.example.intouchmobileapp.presentation.splash_screen.splashScreenComposable
@@ -48,12 +47,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         splashScreenComposable(navController)
                         logInScreenComposable(navController)
+                        chatListScreenComposable(navController)
 
-                        composable(
-                            route = ChatListScreen.route
-                        ) {
-                            ChatListScreen(navController = navController)
-                        }
                         composable(
                             route = ChatScreen.route + "/{$PARAM_CHAT_ID}",
                             arguments = listOf(
