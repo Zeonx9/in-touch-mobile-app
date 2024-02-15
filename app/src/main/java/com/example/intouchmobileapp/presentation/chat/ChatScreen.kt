@@ -1,5 +1,9 @@
 package com.example.intouchmobileapp.presentation.chat
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,21 +29,28 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.intouchmobileapp.R
+import com.example.intouchmobileapp.common.Constants
+import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.chat.components.MessageListItem
-import com.example.intouchmobileapp.presentation.common.TextInCircle
 import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
+import com.example.intouchmobileapp.presentation.common.TextInCircle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     navController: NavController,
-    viewModel: ChatViewModel = hiltViewModel(),
+    state: ChatState,
+    onEvent: (ChatScreenEvent) -> Unit,
 ) {
-    val state = viewModel.state.value
-    val chat = viewModel.chat
     Scaffold (
         topBar = {
              TopAppBar(
@@ -51,21 +62,21 @@ fun ChatScreen(
                          verticalAlignment = Alignment.CenterVertically
                      ) {
                          TextInCircle(
-                             text = chat.getAbbreviation(viewModel.selfId),
+                             text = state.chat!!.getAbbreviation(state.selfId),
                              background = Color.Gray,
                              color = Color.White,
                              size = 40,
                              textSize = 20
                          )
                          Spacer(modifier = Modifier.width(10.dp))
-                         Text(text = chat.getName(viewModel.selfId))
+                         Text(text = state.chat.getName(state.selfId))
                      }
                  },
                  navigationIcon = {
-                     IconButton(onClick = { navController.navigateUp() }) {
+                     IconButton(onClick = { onEvent(ChatScreenEvent.UpEvent(navController)) }) {
                          Icon(
                              imageVector = Icons.Default.ArrowBack,
-                             contentDescription = "back Button"
+                             contentDescription = stringResource(R.string.up_button_description)
                          )
                      }
                  }
@@ -80,19 +91,20 @@ fun ChatScreen(
             ) {
                 TextField(
                     value = state.messageText,
-                    onValueChange = viewModel::updateMessageText,
-                    label = {
-                        Text(text = "type message...")
+                    onValueChange = { onEvent(ChatScreenEvent.MessageTextChanged(it)) },
+                    placeholder = {
+                        Text(text = stringResource(R.string.message_text_field_placeholder_text))
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 IconButton(
-                    onClick = viewModel::sendMessage
+                    onClick = { onEvent(ChatScreenEvent.SendClicked) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Send,
-                        contentDescription = "send button"
+                        contentDescription = stringResource(R.string.send_icon_button_description)
                     )
                 }
             }
@@ -113,10 +125,36 @@ fun ChatScreen(
                 items(state.messages) { message ->
                     MessageListItem(
                         message = message,
-                        fromOtherUser = viewModel.selfId != message.author.id
+                        fromOtherUser = state.selfId != message.author.id
                     )
                 }
             }
         }
+    }
+}
+
+fun NavGraphBuilder.chatScreenComposable(navController: NavController) {
+    composable(
+        route = Screen.ChatScreen.route + "/{${Constants.PARAM_CHAT_ID}}",
+        arguments = listOf(
+            navArgument(Constants.PARAM_CHAT_ID) {
+                type = NavType.IntType
+            }
+        ),
+        enterTransition = {
+            slideIntoContainer(
+                animationSpec = tween(300, easing = EaseIn),
+                towards = AnimatedContentTransitionScope.SlideDirection.Start
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                animationSpec = tween(300, easing = EaseOut),
+                towards = AnimatedContentTransitionScope.SlideDirection.End
+            )
+        }
+    ) {
+        val viewModel: ChatViewModel = hiltViewModel()
+        ChatScreen(navController, viewModel.state.value, viewModel::onEvent)
     }
 }

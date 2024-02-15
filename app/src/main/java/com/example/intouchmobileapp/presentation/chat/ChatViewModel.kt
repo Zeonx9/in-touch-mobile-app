@@ -22,44 +22,57 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val getMessagesUseCase: GetMessagesUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
-    chatByIdUseCase: GetChatByIdUseCase,
+    private val getChatByIdUseCase: GetChatByIdUseCase,
     selfRepository: SelfRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val chatId: Int = savedStateHandle[Constants.PARAM_CHAT_ID]!!
-    private val _state: MutableState<ChatState> = mutableStateOf(ChatState())
+    private val _state: MutableState<ChatState> = mutableStateOf(
+        ChatState(selfId = selfRepository.selfId)
+    )
     val state: State<ChatState> = _state
-    val selfId = selfRepository.selfId
-    val chat = chatByIdUseCase(chatId)
 
     init {
-        fetchMessages(chatId)
+        getChat()
+        getMessages()
     }
 
-    private fun fetchMessages(chatId: Int) {
+    fun onEvent(event: ChatScreenEvent) {
+        when(event) {
+            is ChatScreenEvent.MessageTextChanged -> updateMessageText(event.newMessageText)
+            ChatScreenEvent.SendClicked -> sendMessage()
+            is ChatScreenEvent.UpEvent -> event.navController.navigateUp()
+        }
+    }
+
+    private fun getMessages() {
         getMessagesUseCase(chatId).onEach { result ->
             when(result) {
                 is Resource.Error -> {
-                    _state.value = ChatState(error = result.message!!)
+                    _state.value = _state.value.copy(isLoading = false, error = result.message!!)
                 }
                 is Resource.Loading -> {
-                    _state.value = ChatState(isLoading = true)
+                    _state.value = _state.value.copy(isLoading = true)
                 }
                 is Resource.Success -> {
-                    _state.value = ChatState(messages = result.data!!)
+                    _state.value = _state.value.copy(isLoading = false, messages = result.data!!)
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    fun updateMessageText(text: String) {
-        _state.value = _state.value.copy(
-            messageText = text
-        )
+    private fun getChat() {
+        getChatByIdUseCase(chatId).onEach {
+            _state.value = _state.value.copy(chat = it)
+        }.launchIn(viewModelScope)
     }
 
-    fun sendMessage() {
+    private fun updateMessageText(text: String) {
+        _state.value = _state.value.copy(messageText = text)
+    }
+
+    private fun sendMessage() {
         if (state.value.messageText.isBlank()) {
             return
         }

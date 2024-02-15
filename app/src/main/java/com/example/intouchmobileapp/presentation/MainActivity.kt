@@ -22,6 +22,7 @@ import com.example.intouchmobileapp.presentation.Screen.SettingsScreen
 import com.example.intouchmobileapp.presentation.Screen.SplashScreen
 import com.example.intouchmobileapp.presentation.Screen.UserListScreen
 import com.example.intouchmobileapp.presentation.chat.ChatScreen
+import com.example.intouchmobileapp.presentation.chat.chatScreenComposable
 import com.example.intouchmobileapp.presentation.chat_list.chatListScreenComposable
 import com.example.intouchmobileapp.presentation.log_in.logInScreenComposable
 import com.example.intouchmobileapp.presentation.settings.SettingsScreen
@@ -48,29 +49,8 @@ class MainActivity : ComponentActivity() {
                         splashScreenComposable(navController)
                         logInScreenComposable(navController)
                         chatListScreenComposable(navController)
+                        chatScreenComposable(navController)
 
-                        composable(
-                            route = ChatScreen.route + "/{$PARAM_CHAT_ID}",
-                            arguments = listOf(
-                                navArgument(PARAM_CHAT_ID) {
-                                    type = NavType.IntType
-                                }
-                            ),
-                            enterTransition = {
-                                slideIntoContainer(
-                                    animationSpec = tween(300, easing = EaseIn),
-                                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                                )
-                            },
-                            exitTransition = {
-                                slideOutOfContainer(
-                                    animationSpec = tween(300, easing = EaseOut),
-                                    towards = AnimatedContentTransitionScope.SlideDirection.End
-                                )
-                            }
-                        ) {
-                            ChatScreen(navController = navController)
-                        }
                         composable(
                             route = UserListScreen.route
                         ) {

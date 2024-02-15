@@ -17,15 +17,15 @@ class GetMessagesUseCase @Inject constructor(
                 emit(Resource.Loading())
                 messageRepository.fetchMessagesByChatId(chatId)
             }
-            val messagesFlow = messageRepository.getChatMessagesById(chatId)
-            emit(Resource.Success(messagesFlow.value))
+            emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error(e.message!!))
         }
     }.combine(messageRepository.getChatMessagesById(chatId)) { fetched, saved ->
         when (fetched) {
             is Resource.Success -> Resource.Success(saved)
-            else -> fetched
+            is Resource.Error -> Resource.Error(fetched.message!!)
+            is Resource.Loading -> Resource.Loading()
         }
     }
 }

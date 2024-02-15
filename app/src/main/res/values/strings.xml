@@ -6,4 +6,7 @@
     <string name="password_text_field_label">password</string>
     <string name="log_in_button_text">log in</string>
     <string name="chats_screen_title">Chats</string>
+    <string name="message_text_field_placeholder_text">type message...</string>
+    <string name="up_button_description">back Button</string>
+    <string name="send_icon_button_description">send button</string>
 </resources>
