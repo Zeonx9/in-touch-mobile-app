@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +18,7 @@ import com.example.intouchmobileapp.domain.model.User
 import com.example.intouchmobileapp.presentation.common.TextInCircle
 
 @Composable
-fun UserListItem(user: User, onClick: (User) -> Unit) {
+fun UserListItem(user: User, isLoading: Boolean = false, onClick: (User) -> Unit) {
     Box(
         modifier = Modifier.clickable { onClick(user) }
     ) {
@@ -36,6 +37,10 @@ fun UserListItem(user: User, onClick: (User) -> Unit) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = user.fullName())
+            Spacer(modifier = Modifier.weight(1f))
+            if (isLoading) {
+                CircularProgressIndicator()
+            }
         }
     }
 

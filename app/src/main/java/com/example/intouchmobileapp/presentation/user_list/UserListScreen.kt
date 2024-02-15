@@ -38,7 +38,7 @@ fun UserListScreen(
                 contentPadding = paddingValues
             ) {
                 items(state.users) { user ->
-                    UserListItem(user = user) {
+                    UserListItem(user = user, isLoading = state.loadingUserId == user.id) {
                         onEvent(UserListScreenEvent.UserClickEvent(navController, user))
                     }
                 }

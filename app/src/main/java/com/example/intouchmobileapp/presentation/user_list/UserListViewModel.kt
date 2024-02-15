@@ -62,10 +62,10 @@ class UserListViewModel @Inject constructor(
     private fun openPrivateChat(navController: NavController, userId: Int) {
         getPrivateChatIdUseCase(userId).onEach { result ->
             when(result) {
-                is Resource.Error -> _state.value = _state.value.copy(isLoading = false)
-                is Resource.Loading -> _state.value = _state.value.copy(isLoading = true)
+                is Resource.Error -> _state.value = _state.value.copy(loadingUserId = -1)
+                is Resource.Loading -> _state.value = _state.value.copy(loadingUserId = userId)
                 is Resource.Success -> {
-                    _state.value = _state.value.copy(isLoading = false)
+                    _state.value = _state.value.copy(loadingUserId = -1)
                     navController.navigate(Screen.ChatScreen.withArgs(result.data!!))
                 }
             }
