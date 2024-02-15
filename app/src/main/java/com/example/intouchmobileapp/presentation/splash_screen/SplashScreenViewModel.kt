@@ -1,6 +1,5 @@
 package com.example.intouchmobileapp.presentation.splash_screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -8,13 +7,11 @@ import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.repository.PreferencesRepository
 import com.example.intouchmobileapp.domain.use_case.login.LogInUseCase
 import com.example.intouchmobileapp.domain.use_case.login.StartStompConnectionUseCase
-import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.Screen.ChatListScreen
 import com.example.intouchmobileapp.presentation.Screen.LogInScreen
 import com.example.intouchmobileapp.presentation.common.navigateAndReplaceStartDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
