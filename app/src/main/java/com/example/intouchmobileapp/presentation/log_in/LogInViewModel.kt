@@ -1,6 +1,5 @@
 package com.example.intouchmobileapp.presentation.log_in
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

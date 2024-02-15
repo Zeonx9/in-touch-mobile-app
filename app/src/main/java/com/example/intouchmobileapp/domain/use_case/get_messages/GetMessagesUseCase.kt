@@ -4,7 +4,6 @@ import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

@@ -2,16 +2,15 @@ package com.example.intouchmobileapp.data.remote.stomp
 
 import android.util.Log
 import com.example.intouchmobileapp.data.remote.api.StompApi
-import com.example.intouchmobileapp.domain.model.Chat
 import com.example.intouchmobileapp.data.remote.dto.ConnectEvent
-import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.data.remote.dto.ReadNotification
+import com.example.intouchmobileapp.domain.model.Chat
+import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.model.User
 import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
-import ua.naiksoftware.stomp.dto.StompHeader
 import ua.naiksoftware.stomp.dto.StompMessage
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -152,5 +151,6 @@ class StompApiImpl @Inject constructor(
         val disposable = stompClient.disconnectCompletable().subscribe {
             compositeDisposable.dispose()
         }
+        compositeDisposable.add(disposable)
     }
 }
