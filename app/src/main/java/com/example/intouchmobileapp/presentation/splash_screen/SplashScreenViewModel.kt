@@ -1,4 +1,4 @@
-package com.example.intouchmobileapp.presentation.pre_login
+package com.example.intouchmobileapp.presentation.splash_screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,8 @@ import com.example.intouchmobileapp.domain.repository.PreferencesRepository
 import com.example.intouchmobileapp.domain.use_case.login.LogInUseCase
 import com.example.intouchmobileapp.domain.use_case.login.StartStompConnectionUseCase
 import com.example.intouchmobileapp.presentation.Screen
+import com.example.intouchmobileapp.presentation.Screen.ChatListScreen
+import com.example.intouchmobileapp.presentation.Screen.LogInScreen
 import com.example.intouchmobileapp.presentation.common.navigateAndReplaceStartDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class PreLogInViewModel @Inject constructor(
+class SplashScreenViewModel @Inject constructor(
     private val logInUseCase: LogInUseCase,
     private val startStompConnectionUseCase: StartStompConnectionUseCase,
     preferencesRepository: PreferencesRepository
@@ -31,13 +33,16 @@ class PreLogInViewModel @Inject constructor(
         preferencesRepository.preferences.first()
     }
 
-    fun tryLogin(navController: NavController) {
-        Log.i(javaClass.name, "logged = ${preferences.isLogged}, login = ${preferences.login}, password = ${preferences.password}")
+    fun onEvent(event: SplashScreenEvent) {
+        when(event) {
+            is SplashScreenEvent.LogInEvent -> tryLogin(event.navController)
+        }
+    }
 
+    private fun tryLogin(navController: NavController) {
         if (!preferences.isLogged) {
             viewModelScope.launch {
-                delay(300)
-                navController.navigateAndReplaceStartDestination(Screen.LogInScreen.route)
+                navController.navigateAndReplaceStartDestination(LogInScreen.route)
             }
             return
         }
@@ -45,10 +50,10 @@ class PreLogInViewModel @Inject constructor(
         logInUseCase(preferences.login, preferences.password).onEach {
             when(it) {
                 is Resource.Error ->  {
-                    navController.navigateAndReplaceStartDestination(Screen.LogInScreen.route)
+                    navController.navigateAndReplaceStartDestination(LogInScreen.route)
                 }
                 is Resource.Success -> {
-                    navController.navigateAndReplaceStartDestination(Screen.ChatListScreen.route)
+                    navController.navigateAndReplaceStartDestination(ChatListScreen.route)
                     startStompConnectionUseCase()
                 }
                 else -> Unit

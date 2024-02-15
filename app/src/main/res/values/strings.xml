@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">In Touch Mobile App</string>
     <string name="in_touch">In Touch</string>
+    <string name="app_icon_description">app Icon</string>
 </resources>

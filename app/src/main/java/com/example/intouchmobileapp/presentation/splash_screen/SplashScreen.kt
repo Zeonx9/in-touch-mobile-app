@@ -1,4 +1,4 @@
-package com.example.intouchmobileapp.presentation.pre_login
+package com.example.intouchmobileapp.presentation.splash_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,11 +22,11 @@ import com.example.intouchmobileapp.R
 
 @Composable
 fun PreLogInScreen(
-    preLogInViewModel: PreLogInViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    onEvent: (SplashScreenEvent) -> Unit
 ) {
     LaunchedEffect(Unit) {
-        preLogInViewModel.tryLogin(navController)
+        onEvent(SplashScreenEvent.LogInEvent(navController))
     }
 
     Column (
@@ -34,14 +35,9 @@ fun PreLogInScreen(
     ) {
         Image(
             painter = painterResource(id = R.drawable.intouch_icon),
-            contentDescription = "app Icon",
+            contentDescription = stringResource(R.string.app_icon_description),
             contentScale = ContentScale.Fit,
             modifier = Modifier.width(64.dp)
-        )
-        Text(
-            text = "In Touch",
-            fontSize = 40.sp,
-            color = Color.White
         )
         CircularProgressIndicator()
     }

@@ -11,17 +11,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.intouchmobileapp.common.Constants.PARAM_CHAT_ID
+import com.example.intouchmobileapp.presentation.Screen.*
 import com.example.intouchmobileapp.presentation.chat.ChatScreen
 import com.example.intouchmobileapp.presentation.chat_list.ChatListScreen
 import com.example.intouchmobileapp.presentation.log_in.LogInScreen
-import com.example.intouchmobileapp.presentation.pre_login.PreLogInScreen
+import com.example.intouchmobileapp.presentation.splash_screen.PreLogInScreen
 import com.example.intouchmobileapp.presentation.settings.SettingsScreen
+import com.example.intouchmobileapp.presentation.splash_screen.SplashScreenViewModel
 import com.example.intouchmobileapp.presentation.ui.theme.InTouchMobileAppTheme
 import com.example.intouchmobileapp.presentation.user_list.UserListScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,23 +42,24 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.PreLogInScreen.route
+                        startDestination = SplashScreen.route
                     ) {
-                        composable(Screen.PreLogInScreen.route) {
-                            PreLogInScreen(navController = navController)
+                        composable(SplashScreen.route) {
+                            val viewModel: SplashScreenViewModel = hiltViewModel()
+                            PreLogInScreen(navController, viewModel::onEvent)
                         }
                         composable(
-                            route = Screen.LogInScreen.route
+                            route = LogInScreen.route
                         ) {
                             LogInScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.ChatListScreen.route
+                            route = ChatListScreen.route
                         ) {
                             ChatListScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.ChatScreen.route + "/{$PARAM_CHAT_ID}",
+                            route = ChatScreen.route + "/{$PARAM_CHAT_ID}",
                             arguments = listOf(
                                 navArgument(PARAM_CHAT_ID) {
                                     type = NavType.IntType
@@ -77,12 +81,12 @@ class MainActivity : ComponentActivity() {
                             ChatScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.UserListScreen.route
+                            route = UserListScreen.route
                         ) {
                             UserListScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.SettingsScreen.route
+                            route = SettingsScreen.route
                         ) {
                             SettingsScreen(navController = navController)
                         }
