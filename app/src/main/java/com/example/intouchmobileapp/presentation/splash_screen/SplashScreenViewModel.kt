@@ -12,6 +12,7 @@ import com.example.intouchmobileapp.presentation.Screen.LogInScreen
 import com.example.intouchmobileapp.presentation.common.navigateAndReplaceStartDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -38,23 +39,21 @@ class SplashScreenViewModel @Inject constructor(
 
     private fun tryLogin(navController: NavController) {
         if (!preferences.isLogged) {
-            viewModelScope.launch {
-                navController.navigateAndReplaceStartDestination(LogInScreen.route)
-            }
-            return
+            navController.navigateAndReplaceStartDestination(LogInScreen.route)
         }
-
-        logInUseCase(preferences.login, preferences.password).onEach {
-            when(it) {
-                is Resource.Error ->  {
-                    navController.navigateAndReplaceStartDestination(LogInScreen.route)
+        else {
+            logInUseCase(preferences.login, preferences.password).onEach {
+                when(it) {
+                    is Resource.Error ->  {
+                        navController.navigateAndReplaceStartDestination(LogInScreen.route)
+                    }
+                    is Resource.Success -> {
+                        startStompConnectionUseCase()
+                        navController.navigateAndReplaceStartDestination(ChatListScreen.route)
+                    }
+                    else -> Unit
                 }
-                is Resource.Success -> {
-                    navController.navigateAndReplaceStartDestination(ChatListScreen.route)
-                    startStompConnectionUseCase()
-                }
-                else -> Unit
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+        }
     }
 }

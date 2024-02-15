@@ -22,9 +22,12 @@ import com.example.intouchmobileapp.presentation.Screen.*
 import com.example.intouchmobileapp.presentation.chat.ChatScreen
 import com.example.intouchmobileapp.presentation.chat_list.ChatListScreen
 import com.example.intouchmobileapp.presentation.log_in.LogInScreen
-import com.example.intouchmobileapp.presentation.splash_screen.PreLogInScreen
+import com.example.intouchmobileapp.presentation.log_in.LogInViewModel
+import com.example.intouchmobileapp.presentation.log_in.logInScreenComposable
+import com.example.intouchmobileapp.presentation.splash_screen.SplashScreen
 import com.example.intouchmobileapp.presentation.settings.SettingsScreen
 import com.example.intouchmobileapp.presentation.splash_screen.SplashScreenViewModel
+import com.example.intouchmobileapp.presentation.splash_screen.splashScreenComposable
 import com.example.intouchmobileapp.presentation.ui.theme.InTouchMobileAppTheme
 import com.example.intouchmobileapp.presentation.user_list.UserListScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,15 +47,9 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = SplashScreen.route
                     ) {
-                        composable(SplashScreen.route) {
-                            val viewModel: SplashScreenViewModel = hiltViewModel()
-                            PreLogInScreen(navController, viewModel::onEvent)
-                        }
-                        composable(
-                            route = LogInScreen.route
-                        ) {
-                            LogInScreen(navController = navController)
-                        }
+                        splashScreenComposable(navController)
+                        logInScreenComposable(navController)
+
                         composable(
                             route = ChatListScreen.route
                         ) {

@@ -28,28 +28,18 @@ class LogInViewModel @Inject constructor(
     private val _state = mutableStateOf(LogInState())
     val state: State<LogInState> = _state
 
-    fun logIn(navController: NavController) {
+    fun onEvent(event: LogInScreenEvent) {
+        when(event) {
+            is LogInScreenEvent.LogInClickEvent -> logIn(event.navController)
+            is LogInScreenEvent.LoginTextChangedEvent -> updateLogin(event.newLogin)
+            is LogInScreenEvent.PasswordTextChanged -> updatePassword(event.newPassword)
+        }
+    }
 
+    private fun logIn(navController: NavController) {
         logInUseCase(state.value.login, state.value.password).onEach { result ->
             when(result) {
-                is Resource.Success -> {
-                    _state.value = _state.value.copy(
-                        error = "",
-                        isLoading = false
-                    )
-                    viewModelScope.launch {
-                        saveCredentialsUseCase(state.value.login, state.value.password)
-                    }.invokeOnCompletion {
-                        Log.i(javaClass.name, "saveCredentialsUseCase finished")
-                    }
-                    navController.navigate(Screen.ChatListScreen.route) {
-                        popUpTo(Screen.LogInScreen.route) {
-                            inclusive = true
-                        }
-                    }
-                    navController.navigateAndReplaceStartDestination(Screen.ChatListScreen.route)
-                    startStompConnectionUseCase()
-                }
+                is Resource.Success -> onSuccessfulLogIn(navController)
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
                         error = result.message ?: "",
@@ -66,13 +56,25 @@ class LogInViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun updateLogin(newLogin: String) {
+    private fun onSuccessfulLogIn(navController: NavController) {
+        _state.value = _state.value.copy(
+            error = "",
+            isLoading = false
+        )
+        viewModelScope.launch {
+            saveCredentialsUseCase(state.value.login, state.value.password)
+        }
+        startStompConnectionUseCase()
+        navController.navigateAndReplaceStartDestination(Screen.ChatListScreen.route)
+    }
+
+    private fun updateLogin(newLogin: String) {
         _state.value = _state.value.copy(
             login = newLogin
         )
     }
 
-    fun updatePassword(newPassword: String) {
+    private fun updatePassword(newPassword: String) {
         _state.value = _state.value.copy(
             password = newPassword
         )

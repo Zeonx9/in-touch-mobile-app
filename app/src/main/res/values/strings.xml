@@ -2,4 +2,7 @@
     <string name="app_name">In Touch Mobile App</string>
     <string name="in_touch">In Touch</string>
     <string name="app_icon_description">app Icon</string>
+    <string name="login_text_field_label">login</string>
+    <string name="password_text_field_label">password</string>
+    <string name="log_in_button_text">log in</string>
 </resources>

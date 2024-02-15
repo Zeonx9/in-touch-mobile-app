@@ -5,7 +5,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 
 fun NavController.navigateAndReplaceStartDestination(route: String) {
     navigate(route) {
-        popUpTo(graph.findStartDestination().id) {
+        popUpTo(graph.findStartDestination().route!!) {
             inclusive = true
         }
     }
