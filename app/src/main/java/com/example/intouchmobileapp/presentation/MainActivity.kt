@@ -3,6 +3,10 @@ package com.example.intouchmobileapp.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -56,7 +60,19 @@ class MainActivity : ComponentActivity() {
                                 navArgument(PARAM_CHAT_ID) {
                                     type = NavType.IntType
                                 }
-                            )
+                            ),
+                            enterTransition = {
+                                slideIntoContainer(
+                                    animationSpec = tween(300, easing = EaseIn),
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                                )
+                            },
+                            exitTransition = {
+                                slideOutOfContainer(
+                                    animationSpec = tween(300, easing = EaseOut),
+                                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                                )
+                            }
                         ) {
                             ChatScreen(navController = navController)
                         }

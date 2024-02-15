@@ -32,10 +32,7 @@ fun LoadingErrorPlaceHolder(error: String, isLoading: Boolean, normalScreen: @Co
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .width(64.dp)
-            )
+            CircularProgressIndicator()
         }
     } else {
         normalScreen()

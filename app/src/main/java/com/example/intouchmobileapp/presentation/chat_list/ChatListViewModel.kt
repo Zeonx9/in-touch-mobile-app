@@ -29,7 +29,6 @@ class ChatListViewModel @Inject constructor(
     private val _state = mutableStateOf(ChatListState())
     val state: State<ChatListState> = _state
     val selfId = selfRepository.selfId
-    private var chatObservingJob: Job? = null
 
     init {
         fetchChats()
@@ -51,24 +50,12 @@ class ChatListViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     _state.value = _state.value.copy(
-                        isLoading = false
+                        isLoading = false,
+                        chats = result.data!!
                     )
-                    observeChats(result.data)
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun observeChats(flow: StateFlow<List<Chat>>?) {
-        chatObservingJob?.let {
-            it.cancel()
-            Log.i(javaClass.name, "job watching chats stateflow was cancelled")
-        }
-        chatObservingJob = flow?.onEach {
-            _state.value = _state.value.copy(
-                chats = it
-            )
-        }?.launchIn(viewModelScope)
     }
 
     fun openChat(navController: NavController, chatId: Int) {

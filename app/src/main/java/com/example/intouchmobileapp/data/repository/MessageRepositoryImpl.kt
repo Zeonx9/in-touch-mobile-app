@@ -15,16 +15,22 @@ class MessageRepositoryImpl @Inject constructor(
 ) : MessageRepository {
     private val messagesByChatId: MutableMap<Int, MutableStateFlow<List<Message>>> = HashMap()
     override fun getChatMessagesById(chatId: Int): StateFlow<List<Message>> {
+        if (!messagesByChatId.containsKey(chatId)) {
+            messagesByChatId[chatId] = MutableStateFlow(emptyList())
+        }
         return messagesByChatId[chatId]!!
     }
 
     override fun chatNeedToBeFetched(chatId: Int): Boolean {
-        return !messagesByChatId.containsKey(chatId)
+        return !messagesByChatId.containsKey(chatId) || messagesByChatId[chatId]!!.value.isEmpty()
     }
 
     override suspend fun fetchMessagesByChatId(chatId: Int) {
         val messages = messageApi.fetchChatMessages(chatId, selfRepository.authHeader)
-        messagesByChatId[chatId] = MutableStateFlow(messages)
+        if (!messagesByChatId.containsKey(chatId)) {
+            messagesByChatId[chatId] = MutableStateFlow(emptyList())
+        }
+        messagesByChatId[chatId]!!.update { messages }
     }
 
     override fun onNewMessageReceived(message: Message) {

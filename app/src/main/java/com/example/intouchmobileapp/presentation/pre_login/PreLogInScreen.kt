@@ -43,9 +43,6 @@ fun PreLogInScreen(
             fontSize = 40.sp,
             color = Color.White
         )
-        CircularProgressIndicator(
-            modifier = Modifier
-                .width(64.dp)
-        )
+        CircularProgressIndicator()
     }
 }

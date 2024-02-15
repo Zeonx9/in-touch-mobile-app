@@ -27,18 +27,16 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val getMessagesUseCase: GetMessagesUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
-    private val chatByIdUseCase: GetChatByIdUseCase,
+    chatByIdUseCase: GetChatByIdUseCase,
     selfRepository: SelfRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val chatId: Int = savedStateHandle[Constants.PARAM_CHAT_ID]!!
     private val _state: MutableState<ChatState> = mutableStateOf(ChatState())
-    private var messageWatcher: Job? = null
     val state: State<ChatState> = _state
     val selfId = selfRepository.selfId
-    val chat: Chat
-        get() = chatByIdUseCase(chatId)
+    val chat = chatByIdUseCase(chatId)
 
     init {
         fetchMessages(chatId)
@@ -54,21 +52,10 @@ class ChatViewModel @Inject constructor(
                     _state.value = ChatState(isLoading = true)
                 }
                 is Resource.Success -> {
-                    _state.value = ChatState()
-                    observeMessages(result.data)
+                    _state.value = ChatState(messages = result.data!!)
                 }
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun observeMessages(messagesFlow: StateFlow<List<Message>>?) {
-        messageWatcher?.let {
-            it.cancel()
-            Log.i(javaClass.name, "message Watcher stopped")
-        }
-        messageWatcher = messagesFlow?.onEach {
-            _state.value = ChatState(messages = it)
-        }?.launchIn(viewModelScope)
     }
 
     fun updateMessageText(text: String) {

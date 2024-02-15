@@ -17,6 +17,7 @@ class StartStompConnectionUseCase @Inject constructor(
 ) {
     operator fun invoke() {
         stompApi.connect()
+        Log.i(javaClass.name, "initiating stomp connection")
         stompApi.subscribeTopicConnection(selfRepository.companyId, userRepository::onNewUserConnected)
         stompApi.subscribeQueueChats(selfRepository.selfId, chatRepository::onNewChatReceived)
         stompApi.subscribeQueueMessages(selfRepository.selfId) {

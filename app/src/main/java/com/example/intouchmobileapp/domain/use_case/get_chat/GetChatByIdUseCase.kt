@@ -7,6 +7,7 @@ import javax.inject.Inject
 class GetChatByIdUseCase @Inject constructor(
     private val chatRepository: ChatRepository
 ) {
+    // TODO make it a flow
     operator fun invoke(chatId: Int): Chat {
         return chatRepository.chats.value.find { it.id == chatId }!!
     }

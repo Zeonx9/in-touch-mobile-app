@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
+import ua.naiksoftware.stomp.dto.StompHeader
 import ua.naiksoftware.stomp.dto.StompMessage
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -20,11 +21,11 @@ class StompApiImpl @Inject constructor(
     private val gson: Gson
 ): StompApi {
 
-    private val compositeDisposable = CompositeDisposable()
+    private lateinit var compositeDisposable: CompositeDisposable
     private val subQueue: MutableList<() -> Unit> = ArrayList()
     private val sendQueue: MutableList<() -> Unit> = ArrayList()
 
-    init {
+    private fun watchLifecycle() {
         val lifecycleSubscription = stompClient.lifecycle().subscribe(
             {
                 when(it.type) {
@@ -38,7 +39,7 @@ class StompApiImpl @Inject constructor(
                     LifecycleEvent.Type.ERROR -> {
                         Log.e(javaClass.name, "exception caught!", it.exception)
                     }
-                    else -> {}
+                    else -> Unit
                 }
             },
             {
@@ -67,7 +68,9 @@ class StompApiImpl @Inject constructor(
         logger: (T) -> Unit = {},
         errorHandler: (Throwable) -> Unit = {}
     ) {
+
         val subscriptionCode: () -> Unit = {
+            Log.i(javaClass.name, "subscription: destination=$destination")
             val subscription = stompClient.topic(destination)
                 .subscribe(typedHandler(kClass, handler, logger), errorHandler)
             compositeDisposable.add(subscription)
@@ -98,8 +101,11 @@ class StompApiImpl @Inject constructor(
         }
     }
     override fun connect() {
+        compositeDisposable = CompositeDisposable()
+        watchLifecycle()
         stompClient.connect()
     }
+
     override fun subscribeTopicConnection(companyId: Int, handler: (ConnectEvent) -> Unit) {
         subscribe("/topic/connection", ConnectEvent::class, handler, {
             Log.i(javaClass.name, "received new connection id=${it.userId} connect=${it.connect}")
@@ -140,5 +146,11 @@ class StompApiImpl @Inject constructor(
 
     override fun sendReadChatSignal(notification: ReadNotification) {
         send("/app/read_chat", notification)
+    }
+
+    override fun disconnect() {
+        val disposable = stompClient.disconnectCompletable().subscribe {
+            compositeDisposable.dispose()
+        }
     }
 }

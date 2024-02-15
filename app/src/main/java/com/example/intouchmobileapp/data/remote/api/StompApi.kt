@@ -18,4 +18,5 @@ interface StompApi {
     fun sendConnectSignal(user: User)
     fun sendDisconnectSignal(user: User)
     fun sendReadChatSignal(notification: ReadNotification)
+    fun disconnect()
 }

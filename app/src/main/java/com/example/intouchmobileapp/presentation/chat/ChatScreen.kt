@@ -97,7 +97,7 @@ fun ChatScreen(
                 }
             }
         }
-    ) {
+    ) { paddingValues ->
         LoadingErrorPlaceHolder(error = state.error, isLoading = state.isLoading) {
             val columnState = rememberLazyListState()
             LaunchedEffect(state.messages){
@@ -106,10 +106,9 @@ fun ChatScreen(
                 }
             }
             LazyColumn (
+                contentPadding = paddingValues,
                 state = columnState,
-                modifier = Modifier
-                    .padding(it)
-                    .padding(horizontal = 10.dp)
+                modifier = Modifier.padding(horizontal = 10.dp)
             ) {
                 items(state.messages) { message ->
                     MessageListItem(
