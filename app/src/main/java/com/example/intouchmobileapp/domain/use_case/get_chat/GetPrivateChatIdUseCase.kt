@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.domain.use_case.get_chat
 
+import android.util.Log
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,7 @@ class GetPrivateChatIdUseCase @Inject constructor(
         }
         catch (e: Exception) {
             emit(Resource.Error(e.message!!))
+            Log.e(javaClass.name, "exception caught!", e)
         }
     }
 }

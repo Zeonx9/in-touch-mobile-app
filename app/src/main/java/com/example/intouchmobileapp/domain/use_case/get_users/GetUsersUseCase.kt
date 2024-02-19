@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.domain.use_case.get_users
 
+import android.util.Log
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.model.User
 import com.example.intouchmobileapp.domain.repository.UserRepository
@@ -22,6 +23,7 @@ class GetUsersUseCase @Inject constructor(
         }
         catch (e: Exception) {
             emit(Resource.Error(e.message!!))
+            Log.e(javaClass.name, "exception caught!", e)
         }
     }.combine(userRepository.users) { fetch, saved ->
         when(fetch) {

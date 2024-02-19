@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.domain.use_case.get_messages
 
+import android.util.Log
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.repository.MessageRepository
@@ -20,6 +21,7 @@ class GetMessagesUseCase @Inject constructor(
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error(e.message!!))
+            Log.e(javaClass.name, "exception caught!", e)
         }
     }.combine(messageRepository.getChatMessagesById(chatId)) { fetched, saved ->
         when (fetched) {

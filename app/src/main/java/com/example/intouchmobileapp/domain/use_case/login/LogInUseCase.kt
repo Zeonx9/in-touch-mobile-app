@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.domain.use_case.login
 
+import android.util.Log
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.data.remote.api.AuthApi
 import com.example.intouchmobileapp.data.remote.dto.AuthRequest
@@ -20,6 +21,7 @@ class LogInUseCase @Inject constructor(
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error("error occurred: ${e.message}"))
+            Log.e(javaClass.name, "Log In error", e)
         }
     }
 }
