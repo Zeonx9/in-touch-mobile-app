@@ -1,5 +1,6 @@
 package com.example.intouchmobileapp.di
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.example.intouchmobileapp.common.Constants
 import com.example.intouchmobileapp.data.converter.GsonLocalDateAdapter
@@ -28,13 +29,17 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
+import java.security.cert.X509Certificate
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Singleton
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -42,12 +47,27 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun providesOkHttpClient(): OkHttpClient {
+        val trustManager = customTrustManager()
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, arrayOf(trustManager), null)
+
+        return OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, trustManager)
+            .hostnameVerifier { _, _ -> true }
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(httpClient: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
             .registerTypeAdapter(LocalDateTime::class.java, GsonLocalDateTimeAdapter())
             .registerTypeAdapter(LocalDate::class.java, GsonLocalDateAdapter())
             .create()
+
         return Retrofit.Builder()
+            .client(httpClient)
             .baseUrl(Constants.SERVER_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
@@ -55,10 +75,12 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideStompClient(): StompClient {
+    fun provideStompClient(httpClient: OkHttpClient): StompClient {
         return Stomp.over(
             Stomp.ConnectionProvider.OKHTTP,
-            Constants.WS_ENDPOINT_URL
+            Constants.WS_ENDPOINT_URL,
+            null,
+            httpClient
         )
     }
 
@@ -133,5 +155,21 @@ class AppModule {
         selfRepository: SelfRepository
     ): MessageRepository {
         return MessageRepositoryImpl(messageApi, selfRepository)
+    }
+
+    @SuppressLint("CustomX509TrustManager")
+    private fun customTrustManager(): X509TrustManager {
+        return object : X509TrustManager {
+
+            @SuppressLint("TrustAllX509TrustManager")
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+            @SuppressLint("TrustAllX509TrustManager")
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return emptyArray()
+            }
+        }
     }
 }
