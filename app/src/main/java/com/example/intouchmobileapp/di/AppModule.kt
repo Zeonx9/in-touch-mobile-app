@@ -1,7 +1,7 @@
 package com.example.intouchmobileapp.di
 
-import android.annotation.SuppressLint
 import android.content.Context
+import com.example.intouchmobileapp.R
 import com.example.intouchmobileapp.common.Constants
 import com.example.intouchmobileapp.data.converter.GsonLocalDateAdapter
 import com.example.intouchmobileapp.data.converter.GsonLocalDateTimeAdapter
@@ -34,26 +34,44 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient
-import java.security.cert.X509Certificate
+import java.security.KeyStore
+import java.security.cert.CertificateFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
 
+    private fun getInTouchTrustManagers(context: Context): Array<out TrustManager> {
+        val certificate = CertificateFactory.getInstance("X.509").generateCertificate(
+            context.resources.openRawResource(R.raw.intouch_certificate)
+        )
+        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keyStore.load(null, null)
+        keyStore.setCertificateEntry("intouch", certificate)
+
+        val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        trustManagerFactory.init(keyStore)
+
+        return trustManagerFactory.trustManagers
+    }
+
     @Provides
     @Singleton
-    fun providesOkHttpClient(): OkHttpClient {
-        val trustManager = customTrustManager()
+    fun providesOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
+        val trustManagers = getInTouchTrustManagers(context)
         val sslContext = SSLContext.getInstance("TLS")
-        sslContext.init(null, arrayOf(trustManager), null)
+        sslContext.init(null, trustManagers, null)
 
         return OkHttpClient.Builder()
-            .sslSocketFactory(sslContext.socketFactory, trustManager)
+            .sslSocketFactory(sslContext.socketFactory, trustManagers[0] as X509TrustManager)
             .hostnameVerifier { _, _ -> true }
             .build()
     }
@@ -155,21 +173,5 @@ class AppModule {
         selfRepository: SelfRepository
     ): MessageRepository {
         return MessageRepositoryImpl(messageApi, selfRepository)
-    }
-
-    @SuppressLint("CustomX509TrustManager")
-    private fun customTrustManager(): X509TrustManager {
-        return object : X509TrustManager {
-
-            @SuppressLint("TrustAllX509TrustManager")
-            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
-
-            @SuppressLint("TrustAllX509TrustManager")
-            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
-
-            override fun getAcceptedIssuers(): Array<X509Certificate> {
-                return emptyArray()
-            }
-        }
     }
 }
