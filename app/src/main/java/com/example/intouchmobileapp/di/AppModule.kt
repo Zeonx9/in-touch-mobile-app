@@ -1,6 +1,7 @@
 package com.example.intouchmobileapp.di
 
 import android.content.Context
+import coil.ImageLoader
 import com.example.intouchmobileapp.R
 import com.example.intouchmobileapp.common.Constants
 import com.example.intouchmobileapp.data.converter.GsonLocalDateAdapter
@@ -173,5 +174,16 @@ class AppModule {
         selfRepository: SelfRepository
     ): MessageRepository {
         return MessageRepositoryImpl(messageApi, selfRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageLoader(
+        okHttpClient: OkHttpClient,
+        @ApplicationContext context: Context
+    ): ImageLoader {
+        return ImageLoader.Builder(context)
+            .okHttpClient(okHttpClient)
+            .build()
     }
 }
