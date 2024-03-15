@@ -80,7 +80,9 @@ fun PreviewMessageListItem() {
             patronymic = "Отчество",
             realName = "Имя",
             surname = "Фамилия",
-            phoneNumber = "88005553535"
+            phoneNumber = "88005553535",
+            profilePhotoId = null,
+            thumbnailPhotoId = null
         ),
         chatId = 1,
         dateTime = LocalDateTime.now(),

@@ -29,4 +29,13 @@ data class Chat(
         }
         return abbr.uppercase()
     }
+
+    fun getThumbnailUrl(selfId: Int): String? {
+        return if (isPrivate) {
+            val otherUser = members.find { it.id != selfId }
+            otherUser?.thumbnailUrl
+        } else {
+            null
+        }
+    }
 }

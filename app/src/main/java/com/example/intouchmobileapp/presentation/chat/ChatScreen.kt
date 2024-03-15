@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,7 +42,7 @@ import com.example.intouchmobileapp.common.Constants
 import com.example.intouchmobileapp.presentation.Screen
 import com.example.intouchmobileapp.presentation.chat.components.MessageListItem
 import com.example.intouchmobileapp.presentation.common.LoadingErrorPlaceHolder
-import com.example.intouchmobileapp.presentation.common.TextInCircle
+import com.example.intouchmobileapp.presentation.common.ThumbnailSmall
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,12 +61,11 @@ fun ChatScreen(
                      Row (
                          verticalAlignment = Alignment.CenterVertically
                      ) {
-                         TextInCircle(
-                             text = state.chat!!.getAbbreviation(state.selfId),
+                         ThumbnailSmall(
+                             url = state.chat!!.getThumbnailUrl(state.selfId),
+                             text = state.chat.getAbbreviation(state.selfId),
                              background = Color.Gray,
-                             color = Color.White,
-                             size = 40,
-                             textSize = 20
+                             color = Color.White
                          )
                          Spacer(modifier = Modifier.width(10.dp))
                          Text(text = state.chat.getName(state.selfId))
@@ -75,7 +74,7 @@ fun ChatScreen(
                  navigationIcon = {
                      IconButton(onClick = { onEvent(ChatScreenEvent.UpEvent(navController)) }) {
                          Icon(
-                             imageVector = Icons.Default.ArrowBack,
+                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                              contentDescription = stringResource(R.string.up_button_description)
                          )
                      }

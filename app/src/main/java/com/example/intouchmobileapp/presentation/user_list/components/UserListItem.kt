@@ -10,12 +10,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.intouchmobileapp.domain.model.User
-import com.example.intouchmobileapp.presentation.common.TextInCircle
+import com.example.intouchmobileapp.presentation.common.Thumbnail
+import com.example.intouchmobileapp.presentation.common.ThumbnailMedium
+import timber.log.Timber
+import java.time.LocalDate
 
 @Composable
 fun UserListItem(user: User, isLoading: Boolean = false, onClick: (User) -> Unit) {
@@ -28,20 +33,39 @@ fun UserListItem(user: User, isLoading: Boolean = false, onClick: (User) -> Unit
                 .fillMaxWidth()
                 .padding(5.dp)
         ) {
-            TextInCircle(
-                text = user.abbreviation(),
+            ThumbnailMedium(
+                url = user.thumbnailUrl,
+                text = user.abbreviation,
                 background = Color.Gray,
                 color = Color.White,
-                size = 60,
-                textSize = 30
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = user.fullName())
+            Text(text = user.fullName)
             Spacer(modifier = Modifier.weight(1f))
             if (isLoading) {
                 CircularProgressIndicator()
             }
         }
     }
+}
 
+@Preview
+@Composable
+fun UserListItemPreview() {
+    UserListItem(
+        user = User(
+            id = 1,
+            username = "user",
+            dateOfBirth = LocalDate.of(2003, 1, 9),
+            isOnline = false,
+            patronymic = "Отчество",
+            realName = "Имя",
+            surname = "Фамилия",
+            phoneNumber = "88005553535",
+            profilePhotoId = null,
+            thumbnailPhotoId = null
+        ),
+    ) {
+
+    }
 }

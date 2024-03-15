@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.intouchmobileapp.domain.model.Chat
-import com.example.intouchmobileapp.presentation.common.TextInCircle
+import com.example.intouchmobileapp.presentation.common.ThumbnailMedium
 
 @Composable
 fun ChatListItem(
@@ -28,12 +28,11 @@ fun ChatListItem(
                 .fillMaxWidth()
                 .padding(5.dp)
         ) {
-            TextInCircle(
+            ThumbnailMedium(
+                url = chat.getThumbnailUrl(selfId),
                 text = chat.getAbbreviation(selfId),
                 background = Color.Gray,
-                color = Color.White,
-                size = 60,
-                textSize = 30
+                color = Color.White
             )
             ChatInfo(
                 chatName = chat.getName(selfId),

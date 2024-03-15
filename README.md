@@ -8,6 +8,7 @@
 Ссылки на связанные репозитрии:
 * [Backend](https://github.com/Zeonx9/chat-server-demo)
 * [Windows desktop client](https://github.com/Zeonx9/chat-client-demo)
+* [Design - figma](https://www.figma.com/file/X4x3xxTJln2hWVLn6cdp9x/mobile_design?type=design&node-id=0%3A1&mode=design&t=Cp2elcHBve0NcPSn-1)
 
 ## Использованные библиотеки
 
