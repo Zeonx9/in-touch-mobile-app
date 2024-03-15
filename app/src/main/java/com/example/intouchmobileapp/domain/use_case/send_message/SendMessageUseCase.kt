@@ -1,9 +1,9 @@
 package com.example.intouchmobileapp.domain.use_case.send_message
 
-import android.util.Log
 import com.example.intouchmobileapp.data.remote.api.MessageApi
 import com.example.intouchmobileapp.data.remote.dto.ProtoMessage
 import com.example.intouchmobileapp.domain.repository.SelfRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 class SendMessageUseCase @Inject constructor(
@@ -21,7 +21,7 @@ class SendMessageUseCase @Inject constructor(
             )
         }
         catch (e: Exception) {
-            Log.e(javaClass.name, "exception caught!", e)
+            Timber.e(e)
         }
 
     }

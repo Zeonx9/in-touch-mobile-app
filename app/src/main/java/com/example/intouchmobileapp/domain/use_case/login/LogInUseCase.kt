@@ -1,12 +1,12 @@
 package com.example.intouchmobileapp.domain.use_case.login
 
-import android.util.Log
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.data.remote.api.AuthApi
 import com.example.intouchmobileapp.data.remote.dto.AuthRequest
 import com.example.intouchmobileapp.domain.repository.SelfRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class LogInUseCase @Inject constructor(
@@ -21,7 +21,7 @@ class LogInUseCase @Inject constructor(
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error("error occurred: ${e.message}"))
-            Log.e(javaClass.name, "Log In error", e)
+            Timber.e(e)
         }
     }
 }

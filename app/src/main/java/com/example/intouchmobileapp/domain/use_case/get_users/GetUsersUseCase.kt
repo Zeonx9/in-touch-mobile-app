@@ -1,12 +1,12 @@
 package com.example.intouchmobileapp.domain.use_case.get_users
 
-import android.util.Log
 import com.example.intouchmobileapp.common.Resource
 import com.example.intouchmobileapp.domain.model.User
 import com.example.intouchmobileapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetUsersUseCase @Inject constructor(
@@ -23,7 +23,7 @@ class GetUsersUseCase @Inject constructor(
         }
         catch (e: Exception) {
             emit(Resource.Error(e.message!!))
-            Log.e(javaClass.name, "exception caught!", e)
+            Timber.e(e)
         }
     }.combine(userRepository.users) { fetch, saved ->
         when(fetch) {

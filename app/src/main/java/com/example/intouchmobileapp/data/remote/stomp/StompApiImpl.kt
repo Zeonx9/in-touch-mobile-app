@@ -1,6 +1,5 @@
 package com.example.intouchmobileapp.data.remote.stomp
 
-import android.util.Log
 import com.example.intouchmobileapp.data.remote.api.StompApi
 import com.example.intouchmobileapp.data.remote.dto.ConnectEvent
 import com.example.intouchmobileapp.data.remote.dto.ReadNotification
@@ -9,6 +8,7 @@ import com.example.intouchmobileapp.domain.model.Message
 import com.example.intouchmobileapp.domain.model.User
 import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.LifecycleEvent
 import ua.naiksoftware.stomp.dto.StompMessage
@@ -36,13 +36,13 @@ class StompApiImpl @Inject constructor(
                         sendQueue.clear()
                     }
                     LifecycleEvent.Type.ERROR -> {
-                        Log.e(javaClass.name, "exception caught!", it.exception)
+                        Timber.e(it.exception)
                     }
                     else -> Unit
                 }
             },
             {
-                Log.e(javaClass.name, "exception caught!", it)
+                Timber.e(it)
             }
         )
         compositeDisposable.add(lifecycleSubscription)
@@ -69,7 +69,7 @@ class StompApiImpl @Inject constructor(
     ) {
 
         val subscriptionCode: () -> Unit = {
-            Log.i(javaClass.name, "subscription: destination=$destination")
+            Timber.i("new subscription: destination=$destination")
             val subscription = stompClient.topic(destination)
                 .subscribe(typedHandler(kClass, handler, logger), errorHandler)
             compositeDisposable.add(subscription)
@@ -89,7 +89,7 @@ class StompApiImpl @Inject constructor(
         val sendCode: () -> Unit = {
             val completable = stompClient.send(destination, jsonString)
             val disposable = completable.subscribe {
-                Log.i(javaClass.name, "send completed")
+                Timber.i("send completed")
             }
             compositeDisposable.add(disposable)
         }
@@ -107,14 +107,14 @@ class StompApiImpl @Inject constructor(
 
     override fun subscribeTopicConnection(companyId: Int, handler: (ConnectEvent) -> Unit) {
         subscribe("/topic/connection", ConnectEvent::class, handler, {
-            Log.i(javaClass.name, "received new connection id=${it.userId} connect=${it.connect}")
+            Timber.i("received new connection id=" + it.userId + " connect=" + it.connect)
         })
     }
 
     override fun subscribeQueueMessages(selfId: Int, handler: (Message) -> Unit) {
         subscribe("/user/$selfId/queue/messages", Message::class, handler,
             {
-                Log.i(javaClass.name, "received new message id=${it.id}, text=${it.text}, author id=${it.author.id}")
+                Timber.i("received new message id=" + it.id + ", text=" + it.text + ", author id=" + it.author.id)
             }
         )
     }
@@ -122,7 +122,7 @@ class StompApiImpl @Inject constructor(
     override fun subscribeQueueChats(selfId: Int, handler: (Chat) -> Unit) {
         subscribe("/user/$selfId/queue/chats", Chat::class, handler,
             {
-                Log.i(javaClass.name, "received new chat id=${it.id}, members=${it.members.size}")
+                Timber.i("received new chat id=" + it.id + ", members=" + it.members.size)
             }
         )
     }
@@ -130,7 +130,7 @@ class StompApiImpl @Inject constructor(
     override fun subscribeQueueReadNotifications(selfId: Int, handler: (ReadNotification) -> Unit) {
         subscribe("/user/$selfId/queue/read_notifications", ReadNotification::class, handler,
             {
-                Log.i(javaClass.name, "received new read notification chatId=${it.chatId} userId=${it.userId}")
+                Timber.i("received new read notification chatId=" + it.chatId + " userId=" + it.userId)
             }
         )
     }
