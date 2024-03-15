@@ -10,16 +10,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.intouchmobileapp.domain.model.User
-import com.example.intouchmobileapp.presentation.common.Thumbnail
 import com.example.intouchmobileapp.presentation.common.ThumbnailMedium
-import timber.log.Timber
 import java.time.LocalDate
 
 @Composable
